@@ -1,23 +1,18 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home.tsx';
-import Page2 from './pages/Page2.tsx';
+import Playlists from './pages/Playlists.tsx';
+import Playlist from './pages/Playlist.tsx';
 
 function App() {
 
-  return (
-    <div>
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/page2">Page 2</Link>
-      </div>
-      <div>
+  return (<>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/page2" element={<Page2 />} />
+          <Route path="/playlists" element={<Playlists />} />
+          <Route path="/playlist" element={<Playlist />} />
         </Routes>
-      </div>
-    </div>
+    </>
   );
 }
 
-export default App
+export default App;
