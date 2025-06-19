@@ -1,36 +1,52 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 
 const Background = () => {
-
     // More musical symbols for variety
-    const musicalSymbols = ["♪", "♫", "♬", "♩", "♭", "♯", "𝄞", "𝄢", "♮", "𝄐"]
+    const musicalSymbols = ["♪", "♫", "♬", "♩", "♭", "♯", "𝄞", "𝄢", "♮", "𝄐"];
 
-    // More floating symbols with color variations
-    const floatingSymbols = Array.from({ length: 18 }, (_, i) => ({
-        id: i,
-        symbol: musicalSymbols[Math.floor(Math.random() * musicalSymbols.length)],
-        delay: Math.random() * 10,
-        duration: 15 + Math.random() * 10,
-        x: Math.random() * 100,
-        size: Math.random() > 0.6 ? "text-2xl" : Math.random() > 0.3 ? "text-xl" : "text-lg",
-        colorClass: ["text-green-700", "text-emerald-700", "text-teal-700", "text-green-600", "text-emerald-600"][
-            Math.floor(Math.random() * 5)
+    // Memoize floating symbols so they're generated only once
+    const floatingSymbols = useMemo(
+        () =>
+            Array.from({ length: 18 }, (_, i) => ({
+                id: i,
+                symbol: musicalSymbols[Math.floor(Math.random() * musicalSymbols.length)],
+                delay: Math.random() * 10,
+                duration: 15 + Math.random() * 10,
+                x: Math.random() * 100,
+                size:
+                    Math.random() > 0.6
+                        ? "text-2xl"
+                        : Math.random() > 0.3
+                        ? "text-xl"
+                        : "text-lg",
+                colorClass: [
+                    "text-green-700",
+                    "text-emerald-700",
+                    "text-teal-700",
+                    "text-green-600",
+                    "text-emerald-600",
+                ][Math.floor(Math.random() * 5)],
+            })),
+        [] // Only run once on mount
+    );
+
+    // Memoize static symbols as well (optional, but for consistency)
+    const staticSymbols = useMemo(
+        () => [
+            { symbol: "♪", x: 15, y: 20, delay: 0, color: "text-green-700" },
+            { symbol: "♫", x: 85, y: 15, delay: 2, color: "text-emerald-700" },
+            { symbol: "♬", x: 10, y: 70, delay: 4, color: "text-teal-700" },
+            { symbol: "♩", x: 90, y: 75, delay: 6, color: "text-green-600" },
+            { symbol: "𝄞", x: 25, y: 85, delay: 1, color: "text-emerald-600" },
+            { symbol: "♭", x: 75, y: 25, delay: 3, color: "text-green-700" },
+            { symbol: "♯", x: 50, y: 10, delay: 5, color: "text-teal-600" },
+            { symbol: "♮", x: 20, y: 50, delay: 7, color: "text-emerald-700" },
+            { symbol: "𝄢", x: 80, y: 60, delay: 8, color: "text-green-600" },
+            { symbol: "♪", x: 60, y: 90, delay: 9, color: "text-teal-700" },
         ],
-    }))
-
-    // Static symbols with enhanced colors
-    const staticSymbols = [
-        { symbol: "♪", x: 15, y: 20, delay: 0, color: "text-green-700" },
-        { symbol: "♫", x: 85, y: 15, delay: 2, color: "text-emerald-700" },
-        { symbol: "♬", x: 10, y: 70, delay: 4, color: "text-teal-700" },
-        { symbol: "♩", x: 90, y: 75, delay: 6, color: "text-green-600" },
-        { symbol: "𝄞", x: 25, y: 85, delay: 1, color: "text-emerald-600" },
-        { symbol: "♭", x: 75, y: 25, delay: 3, color: "text-green-700" },
-        { symbol: "♯", x: 50, y: 10, delay: 5, color: "text-teal-600" },
-        { symbol: "♮", x: 20, y: 50, delay: 7, color: "text-emerald-700" },
-        { symbol: "𝄢", x: 80, y: 60, delay: 8, color: "text-green-600" },
-        { symbol: "♪", x: 60, y: 90, delay: 9, color: "text-teal-700" },
-    ]
+        []
+    );
 
     return (
         <div className="h-screen w-full overflow-hidden relative bg-gradient-to-br from-white via-green-50 to-emerald-50">

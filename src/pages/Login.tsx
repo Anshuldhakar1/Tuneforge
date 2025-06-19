@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Play } from 'lucide-react';
+import AppLogo from '../components/app/AppLogo';
 
 const Login = () => {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -70,7 +70,7 @@ const Login = () => {
                         className={`inline-flex items-center gap-2 text-2xl font-bold transition-colors text-gray-900`}
                     >
                         <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                            <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                            <AppLogo className=" text-white fill-white" />
                         </div>
                         TuneForger
                     </span>
