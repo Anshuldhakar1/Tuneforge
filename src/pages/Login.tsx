@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Play } from 'lucide-react';
 
 const Login = () => {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -62,10 +63,21 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8">
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8 border-2 border-grey-200 rounded-lg p-8 bg-white/80 backdrop-blur shadow-md font-sans">
+                <div className="text-center mb-8">
+                    <span
+                        className={`inline-flex items-center gap-2 text-2xl font-bold transition-colors text-gray-900`}
+                    >
+                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                            <Play className="w-4 h-4 text-white fill-white ml-0.5" />
+                        </div>
+                        TuneForger
+                    </span>
+                </div>
+            
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="mt-6 text-center text-3xl text-gray-900">
                         {isSignUp ? 'Create your account' : 'Sign in to your account'}
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
@@ -160,7 +172,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
