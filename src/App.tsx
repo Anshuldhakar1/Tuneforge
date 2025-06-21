@@ -8,9 +8,11 @@ import Background from './components/app/Background.tsx';
 import Header from './components/app/Header.tsx';
 import { useState } from 'react';
 import { Toaster } from 'sonner';
+import { useAuth } from './auth/AuthContext.tsx';
 
 function App() {
 
+  const { user, signout, loading } = useAuth();
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
 
   return (
@@ -28,11 +30,11 @@ function App() {
             element={
               <ProtectedRoute>
                 <div>
-                  <Header isSpotifyConnected={isSpotifyConnected} setSpotifyConnected={setIsSpotifyConnected} />
+                  <Header isSpotifyConnected={isSpotifyConnected} setSpotifyConnected={setIsSpotifyConnected} user={user} signout={signout} />
                 </div>
                 <div>
                   <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Home user={user} loading={loading} signout={signout} />} />
                     <Route path="/playlists" element={<Playlists />} />
                     <Route path="/playlist" element={<Playlist />} />
                   </Routes>

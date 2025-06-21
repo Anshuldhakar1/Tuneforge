@@ -6,9 +6,15 @@ import SpotifyConnect from "./SpotifyConnect";
 interface HeaderProps {
     isSpotifyConnected: boolean;
     setSpotifyConnected: (connected: boolean) => void;
+    user: {
+        username: string;
+        email: string;
+        userId: string;
+    } | null;
+    signout: () => void;
 };
 
-const Header = ({ isSpotifyConnected, setSpotifyConnected }: HeaderProps) => {
+const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: HeaderProps) => {
     return (
         <header className=" text-white p-4 flex justify-between items-center m-2">
             <div className="bg-white flex items-center">
@@ -22,8 +28,8 @@ const Header = ({ isSpotifyConnected, setSpotifyConnected }: HeaderProps) => {
             </div>
 
             <div>
-                <HeaderSelect className="text-black"/>
-            </div>
+                <HeaderSelect user={user} signout={signout} className="text-black"/>
+            </div> 
         </header>
     );
 };

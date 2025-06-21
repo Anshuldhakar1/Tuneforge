@@ -1,7 +1,16 @@
-import { useAuth } from '../auth/AuthContext';
+interface HomeProps {
+    user: {
+        username: string;
+        email: string;
+        userId: string;
+    } | null;
+    loading: boolean;
+    signout: () => void;
+}
 
-const Home = () => {
-    const { user, signout, loading } = useAuth();
+const Home = (
+    { user, loading, signout }: HomeProps
+) => {
 
     if (loading) {
         return (
