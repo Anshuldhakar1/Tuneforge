@@ -21,6 +21,52 @@ type AuthResult = {
   userId: string;
 };
 
+// Helper function to get authenticated user ID from context
+export async function getAuthUserId(ctx: any): Promise<string | null> {
+  // Try to get token from different sources
+  let token: string | null = null;
+  
+  // For HTTP requests (router context)
+  if (ctx.request) {
+    const authHeader = ctx.request.headers.get("Authorization");
+    token = authHeader?.replace("Bearer ", "") || null;
+    
+    // Also check URL params for token (useful for some scenarios)
+    if (!token) {
+      const url = new URL(ctx.request.url);
+      token = url.searchParams.get("token");
+    }
+  }
+  
+  // For regular convex context with auth header
+  if (!token && ctx.auth) {
+    // If using Convex auth system
+    const identity = await ctx.auth.getUserIdentity();
+    if (identity) {
+      // Find user by email or subject
+      const user = await ctx.db
+        .query("users")
+        .withIndex("byEmail", (q: any) => q.eq("email", identity.email))
+        .first();
+      return user?._id || null;
+    }
+  }
+  
+  if (!token) return null;
+  
+  // Find session by token
+  const session = await ctx.db
+    .query("sessions")
+    .withIndex("byToken", (q:any) => q.eq("token", token))
+    .first();
+    
+  if (!session || session.expiresAt < Date.now()) {
+    return null;
+  }
+  
+  return session.userId;
+}
+
 // Signup action (uses bcrypt, so must be an action)
 export const signup = action({
   args: {
