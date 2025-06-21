@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, LogOut, ListMusic } from "lucide-react";
-// import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface HeaderSelectProps {
     className: string;
@@ -72,6 +72,13 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                     className="absolute left-0 top-full mt-2 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 py-2 animate-fade-in"
                     style={{ width: "10rem" }}
                 >
+                    <Link
+                        to={`/playlists`}
+                        className="flex items-center w-full px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors gap-2"
+                    >
+                        <ListMusic size={18} className="text-green-500" />
+                        My Playlists
+                    </Link>
                     <button
                         className="flex items-center w-full px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors gap-2"
                         onClick={signout}
@@ -79,13 +86,6 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                         <LogOut size={18} className="text-red-400" />
                         Sign out
                     </button>
-                    <a
-                        href={`/user/${user.userId}/playlists`}
-                        className="flex items-center w-full px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors gap-2"
-                    >
-                        <ListMusic size={18} className="text-green-500" />
-                        My Playlists
-                    </a>
                 </div>
             )}
         </div>
