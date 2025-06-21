@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Music } from "lucide-react";
-import { PlaylistsToolbar } from "../components/app/PlaylistToolbar";
-import { PlaylistCard } from "../components/app/PlaylistCard";
-import { PlaylistDeleteModal } from "../components/app/PlaylistDeleteModal";
+import { PlaylistsToolbar } from "../components/app/Playlists/PlaylistToolbar";
+import { PlaylistCard } from "../components/app/Playlists/PlaylistCard";
+import { PlaylistDeleteModal } from "../components/app/Playlists/PlaylistDeleteModal";
 
 const staticPlaylists = [
   {
@@ -73,7 +73,7 @@ function Playlists({ user }: PlaylistsProps) {
   return (
     <main
       className="
-        max-w-4xl w-full mx-auto my-12 p-5
+        w-[90vw] mx-auto my-12 p-5
         rounded-2xl shadow-xl
         border border-[#31c266]/20
         bg-white/90 dark:bg-gray-900/90
@@ -142,7 +142,7 @@ function Playlists({ user }: PlaylistsProps) {
       <div
         className={
           viewMode === "grid"
-            ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"
+            ? "flex gap-4"
             : "flex flex-col gap-3"
         }
       >

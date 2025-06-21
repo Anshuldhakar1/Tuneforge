@@ -1,12 +1,12 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
     XCircle,
 } from "lucide-react";
 import React from "react";
-import { PlaylistHeader } from "../components/app/PlaylistHeader";
-import { PlaylistInfo } from "../components/app/PlaylistInfo";
-import { PlaylistActions } from "../components/app/PlaylistActions";
-import { PlaylistTrackTable } from "../components/app/PlaylistTrackTable";
+import { PlaylistHeader } from "../components/app/Playlist/PlaylistHeader";
+import { PlaylistInfo } from "../components/app/Playlist/PlaylistInfo";
+import { PlaylistActions } from "../components/app/Playlist/PlaylistActions";
+import { PlaylistTrackTable } from "../components/app/Playlist/PlaylistTrackTable";
 
 // Mock data for demonstration
 const playlists = [
@@ -91,12 +91,12 @@ const Playlist: React.FC<PlaylistProps> = ({ user }) => {
                 <p className="text-gray-600 dark:text-gray-300 mb-4">
                     The playlist you are looking for does not exist or has been removed.
                 </p>
-                <a
-                    href="/"
+                <Link
+                    to="/"
                     className="inline-block px-6 py-2 rounded-full bg-[#31c266] text-white font-medium hover:bg-[#259a4d] transition"
                 >
                     Go back to Home
-                </a>
+                </Link>
             </div>
         );
     }

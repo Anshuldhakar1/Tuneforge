@@ -28,7 +28,8 @@ export function PlaylistCard({
     <Link
       to={"/playlist/" + playlist._id}
       key={playlist._id}
-      className="rounded-xl shadow z-10 cursor-pointer border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col hover:scale-[1.015] bg-white dark:bg-gray-900"
+      className="rounded-xl flex-1 max-w-[20vw] shadow z-10 cursor-pointer border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col bg-white dark:bg-gray-900
+        transition-all duration-200 ease-in hover:scale-[1.015] hover:shadow-lg"
       style={{ minHeight: 300 }}
     >
       <div
@@ -45,7 +46,7 @@ export function PlaylistCard({
             e.preventDefault();
             onLike(playlist._id);
           }}
-          className="absolute top-3 right-3 z-12 p-1 rounded-full bg-white/80 hover:bg-white transition ease-in"
+          className="absolute top-3 right-3 z-12 p-1 rounded-full bg-white/80 hover:bg-white transition-all duration-200 ease-in-out"
         >
           <Heart
             size={18}
@@ -59,7 +60,7 @@ export function PlaylistCard({
             href={playlist.spotifyUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute bottom-3 left-3 p-1.5 bg-white rounded-lg shadow hover:scale-105 transition ease-in"
+            className="absolute bottom-3 left-3 p-1.5 bg-white rounded-lg shadow transition-all duration-200 ease-in-out hover:scale-105"
             title="Open in Spotify"
           >
             <svg width={18} height={18} viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -84,7 +85,7 @@ export function PlaylistCard({
               e.preventDefault();
               onDelete(playlist._id);
             }}
-            className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition ease-in"
+            className="p-1 rounded-full transition-all duration-200 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <Trash2 size={16} color="#ef4444" />
           </button>

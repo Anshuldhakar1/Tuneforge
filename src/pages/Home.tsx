@@ -1,67 +1,150 @@
+import { useState } from "react"
+import {
+  Zap,
+  Code,
+  Plane,
+  Heart,
+  Headphones,
+  Coffee,
+  Sun,
+  Sparkles,
+  Volume2,
+} from "lucide-react";
+
+import type { CuratedPlaylist } from "../components/app/Home/CuratedPlaylistCard";
+import CuratedPlaylistsSection from "../components/app/Home/CuratedPlaylistsSection";
+import HeaderSection from "../components/app/Home/HeaderSection";
+import LoadingScreen from "../components/app/Home/LoadingScreen";
+import ThreeColumnLayout from "../components/app/Home/ThreeColumnLayout";
+
 interface HomeProps {
-    user: {
-        username: string;
-        email: string;
-        userId: string;
-    } | null;
-    loading: boolean;
-    signout: () => void;
+  user: {
+    username: string
+    email: string
+    userId: string
+  } | null
+  loading: boolean
 }
 
-const Home = (
-    { user, loading, signout }: HomeProps
-) => {
+const Home = ({ user, loading }: HomeProps) => {
+  const [description, setDescription] = useState("")
+  const [playlistName, setPlaylistName] = useState("")
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [focusedInput, setFocusedInput] = useState<string | null>(null)
 
-    if (loading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
-            </div>
-        );
-    }
+  const curatedPlaylists: CuratedPlaylist[] = [
+    {
+      icon: <Zap className="w-4 h-4" />,
+      category: "Fitness",
+      title: "High-energy workout anthems with heavy bass drops",
+      color: "text-orange-600",
+      bg: "bg-orange-50",
+      hover: "hover:bg-orange-100",
+    },
+    {
+      icon: <Code className="w-4 h-4" />,
+      category: "Study",
+      title: "Lo-fi hip hop and ambient soundscapes for focus",
+      color: "text-indigo-600",
+      bg: "bg-indigo-50",
+      hover: "hover:bg-indigo-100",
+    },
+    {
+      icon: <Plane className="w-4 h-4" />,
+      category: "Travel",
+      title: "Classic rock road trip essentials with epic solos",
+      color: "text-blue-600",
+      bg: "bg-blue-50",
+      hover: "hover:bg-blue-100",
+    },
+    {
+      icon: <Heart className="w-4 h-4" />,
+      category: "Romance",
+      title: "Intimate acoustic love songs and soulful R&B",
+      color: "text-rose-600",
+      bg: "bg-rose-50",
+      hover: "hover:bg-rose-100",
+    },
+    {
+      icon: <Headphones className="w-4 h-4" />,
+      category: "Tech",
+      title: "Dark synthwave and cyberpunk electronic beats",
+      color: "text-emerald-600",
+      bg: "bg-emerald-50",
+      hover: "hover:bg-emerald-100",
+    },
+    {
+      icon: <Coffee className="w-4 h-4" />,
+      category: "Jazz",
+      title: "Smooth jazz standards and contemporary fusion",
+      color: "text-amber-600",
+      bg: "bg-amber-50",
+      hover: "hover:bg-amber-100",
+    },
+    {
+      icon: <Sun className="w-4 h-4" />,
+      category: "Weekend",
+      title: "Uplifting indie pop for sunny adventures",
+      color: "text-yellow-600",
+      bg: "bg-yellow-50",
+      hover: "hover:bg-yellow-100",
+    },
+    {
+      icon: <Sparkles className="w-4 h-4" />,
+      category: "Party",
+      title: "Nostalgic 2000s hits and throwback vibes",
+      color: "text-violet-600",
+      bg: "bg-violet-50",
+      hover: "hover:bg-violet-100",
+    },
+    {
+      icon: <Volume2 className="w-4 h-4" />,
+      category: "Wellness",
+      title: "Meditative world music and nature sounds",
+      color: "text-green-600",
+      bg: "bg-green-50",
+      hover: "hover:bg-green-100",
+    },
+  ]
 
-    return (
-        <div className=" py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-                <div className="shadow rounded-lg p-6 bg-white/80 backdrop-blur">
-                    <div className="flex justify-between items-center mb-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-900">Welcome to Tuneforge</h1>
-                            <p className="text-gray-600 mt-2">Hello, {user?.username}!</p>
-                        </div>
-                        <button
-                            onClick={signout}
-                            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        >
-                            Sign Out
-                        </button>
-                    </div>
+  const handleGenerate = async () => {
+    if (!description.trim()) return
+    setIsGenerating(true)
+    setTimeout(() => {
+      setIsGenerating(false)
+      console.log("Generated playlist:", { description, playlistName })
+    }, 2000)
+  }
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div className="bg-gray-50/80 p-4 rounded-lg">
-                            <h3 className="font-semibold text-gray-900 mb-2">User Info</h3>
-                            <p className="text-sm text-gray-600">Email: {user?.email}</p>
-                            <p className="text-sm text-gray-600">Username: {user?.username}</p>
-                            <p className="text-sm text-gray-600">User ID: {user?.userId}</p>
-                        </div>
+  const handleCuratedClick = (playlist: CuratedPlaylist) => {
+    setDescription(playlist.title)
+    setPlaylistName("")
+  }
 
-                        <div className="bg-blue-50/80 p-4 rounded-lg">
-                            <h3 className="font-semibold text-blue-900 mb-2">Session Info</h3>
-                            <p className="text-sm text-blue-600">Session expires after 3 hours of inactivity</p>
-                            <p className="text-sm text-blue-600">Auto-logout is enabled</p>
-                        </div>
+  if (loading) return <LoadingScreen />
 
-                        <div className="bg-green-50/80 p-4 rounded-lg">
-                            <h3 className="font-semibold text-green-900 mb-2">Features</h3>
-                            <p className="text-sm text-green-600">✓ Protected routes</p>
-                            <p className="text-sm text-green-600">✓ Session management</p>
-                            <p className="text-sm text-green-600">✓ Secure authentication</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+  return (
+    <div className="min-h-screen relative overflow-hidden ">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 py-12">
+        <HeaderSection />
+        {user && ( <span></span> )}
+        <ThreeColumnLayout
+          description={description}
+          setDescription={setDescription}
+          playlistName={playlistName}
+          setPlaylistName={setPlaylistName}
+          isGenerating={isGenerating}
+          handleGenerate={handleGenerate}
+          focusedInput={focusedInput}
+          setFocusedInput={setFocusedInput}
+        />
+        <CuratedPlaylistsSection
+          curatedPlaylists={curatedPlaylists}
+          handleCuratedClick={handleCuratedClick}
+        />
+      </div>
+    </div>
+  )
+}
 
-export default Home;
+export default Home

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import AppLogo from "./AppLogo";
-import HeaderSelect from "./HeaderSelect";
-import SpotifyConnect from "./SpotifyConnect";
+import HeaderSelect from "./Header/HeaderSelect";
+import SpotifyConnect from "./Header/SpotifyConnect";
 
 interface HeaderProps {
     isSpotifyConnected: boolean;
@@ -16,14 +16,14 @@ interface HeaderProps {
 
 const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: HeaderProps) => {
     return (
-        <header className=" text-white p-4 flex justify-between items-center m-2">
+        <header className=" text-white p-4 flex justify-between items-center m-2 px-12">
             <div className="bg-white flex items-center">
                 <Link to="/" className="flex items-center scale-[1.2] hover:opacity-80 transition-opacity">
                     <AppLogo className="w-8 h-8 text-white fill-white ml-0.5" />
                     <span className="ml-2 text-lg text-black relative top-[-2px] font-semibold">TuneForger</span>
                 </Link>
             </div>
-            <div>
+            <div className="relative left-4">
                 <SpotifyConnect isSpotifyConnected={isSpotifyConnected} setSpotifyConnected={setSpotifyConnected} className="text-black" />
             </div>
 

@@ -47,7 +47,7 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
             ref={ref}
         >
             <button
-                className="flex items-center px-2 py-1.5 rounded-full bg-white border border-neutral-200 hover:border-green-400 transition-colors shadow w-40 max-w-xs min-w-[10rem]"
+                className="grid grid-cols-[auto_1fr_auto] items-center px-2 py-1.5 rounded-full bg-white border border-neutral-200 hover:border-green-400 transition-colors shadow w-40 max-w-xs min-w-[10rem]"
                 onClick={() => setOpen((o) => !o)}
                 aria-haspopup="true"
                 aria-expanded={open}
@@ -56,10 +56,9 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                 <span className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white font-bold text-base shadow-inner select-none border border-green-200">
                     {getInitials(user.username)}
                 </span>
-                <span className="text-sm font-semibold text-neutral-900 leading-tight truncate max-w-[6.5rem] ml-2">
+                <span className="text-sm text-center font-semibold text-neutral-900 leading-tight truncate max-w-[6.5rem] ml-2">
                     {capitalize(user.username)}
                 </span>
-                <span className="flex-1" />
                 <span>
                     <ChevronDown
                         size={18}
@@ -69,7 +68,7 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
             </button>
             {open && (
                 <div
-                    className="absolute left-0 top-full mt-2 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 py-2 animate-fade-in"
+                    className="absolute left-0 top-full mt-0 bg-white border border-neutral-200 rounded-lg shadow-lg z-50 py-2 animate-fade-in"
                     style={{ width: "10rem" }}
                 >
                     <Link

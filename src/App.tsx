@@ -68,7 +68,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/" element={<Home user={user!} loading={loading} signout={signout} />} />
+          <Route path="/" element={<Home user={user!} loading={loading}  />} />
           <Route path="/playlists" element={<Playlists user={user!} />} />
           <Route path="/playlist/:playlistId" element={<Playlist user={user!} />} />
         </Route>
