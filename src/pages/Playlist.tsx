@@ -83,6 +83,8 @@ const Playlist: React.FC<PlaylistProps> = ({ user }) => {
         return (
             <div className="max-w-2xl mx-auto mt-24 p-10 rounded-3xl shadow-2xl border-2 border-[#31c266]/20 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl flex flex-col items-center text-center">
                 <XCircle size={64} className="text-[#ef4444] mb-4" />
+
+                {user && <span>{user.username}</span>}
                 <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
                     Playlist Not Found
                 </h1>

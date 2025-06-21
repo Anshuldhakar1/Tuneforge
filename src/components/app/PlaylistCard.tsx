@@ -16,15 +16,13 @@ type PlaylistCardProps = {
   liked: boolean;
   onLike: (id: string) => void;
   onDelete: (id: string) => void;
-  viewMode: "grid" | "list";
 };
 
 export function PlaylistCard({
   playlist,
   liked,
   onLike,
-  onDelete,
-  viewMode,
+  onDelete
 }: PlaylistCardProps) {
   return (
     <Link

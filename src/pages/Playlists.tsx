@@ -89,6 +89,7 @@ function Playlists({ user }: PlaylistsProps) {
           "0 8px 32px 0 rgba(49,194,102,0.10), 0 1.5px 6px 0 rgba(30,44,60,0.06)",
       }}
     >
+      {user && <span>{user.username}</span>}
       <svg
         aria-hidden="true"
         className="absolute inset-0 w-full h-full pointer-events-none select-none"
@@ -152,7 +153,6 @@ function Playlists({ user }: PlaylistsProps) {
             liked={likedPlaylists.includes(playlist._id)}
             onLike={toggleLike}
             onDelete={setDeleteModal}
-            viewMode={viewMode}
           />
         ))}
       </div>

@@ -1,5 +1,4 @@
 import { Edit2, Calendar, Clock, Check, X } from "lucide-react";
-import React from "react";
 
 type PlaylistInfoProps = {
   name: string;
