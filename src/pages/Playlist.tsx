@@ -1,17 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
-    Heart,
-    Share2,
-    Download,
-    Edit2,
-    Calendar,
-    Clock,
-    Trash2,
-    Headphones,
-    Music,
     XCircle,
-    Check,
-    X,
 } from "lucide-react";
 import React from "react";
 import { PlaylistHeader } from "../components/app/PlaylistHeader";
