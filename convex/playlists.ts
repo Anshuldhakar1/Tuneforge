@@ -7,6 +7,7 @@ export const createPlayList = action({
     args: {
       token: v.string(),
       response: v.any(),
+      playlistName: v.string(),
     },
     handler: async (ctx, args): Promise<any> => {
       
@@ -29,7 +30,7 @@ export const createPlayList = action({
 
       const playlistId = await ctx.runMutation(api.playlists.insertPlaylist, {
         userId: userId,
-        name: response.playlist.name,
+        name:  args.playlistName !== "" ? args.playlistName : response.playlist.name,
         description: response.playlist.description,
         createdAt: Date.now(),
         updatedAt: Date.now(),

@@ -19,7 +19,6 @@ import ThreeColumnLayout from "../components/app/Home/ThreeColumnLayout";
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
-// import { openAIGenerate } from "../../convex/openai";
 
 interface HomeProps {
   user: {
@@ -37,7 +36,6 @@ const Home = ({ user, loading }: HomeProps) => {
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
 
   const generate = useAction(api.gemini.aiGenerate);
-
 
   const curatedPlaylists: CuratedPlaylist[] = [
     {
@@ -126,7 +124,7 @@ const Home = ({ user, loading }: HomeProps) => {
     }
 
     try {
-      const result = await generate({ prompt: description, token: sessionToken });
+      const result = await generate({ prompt: description, playlistName: playlistName, token: sessionToken });
       console.log("AI generation result: ", result);
       toast
         .success("Playlist generated successfully!", {

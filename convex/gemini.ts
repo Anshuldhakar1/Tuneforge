@@ -98,6 +98,7 @@ async function retryWithBackoff<T>(
     args: {
       token: v.string(),
       prompt: v.string(),
+      playlistName: v.string(),
     },
     handler: async (_ctx, args) => {
       const genprompt =
@@ -123,6 +124,7 @@ async function retryWithBackoff<T>(
   
         const actualTracksFound: any = await _ctx.runAction(api.playlists.createPlayList, {
           token: args.token,
+          playlistName: args.playlistName,
           response: parsedResponse,
         });
 
