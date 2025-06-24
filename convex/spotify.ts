@@ -1,6 +1,7 @@
 import { v } from "convex/values";
-import { action } from "./_generated/server";
+import { action, mutation } from "./_generated/server";
 import { api } from "./_generated/api";
+import type { Doc } from "./_generated/dataModel";
 
 export const getTrackFromSpotify = action({
   args: {
@@ -63,4 +64,39 @@ export const getTrackFromSpotify = action({
 
     return { spotifyURI: trackMatch && artistMatch ? track.uri : null };
   },
+});
+
+export const deletePlaylistFromSpotify = action({
+    args: {
+        playlistId: v.id("playlists"),
+    },
+    handler: async (ctx, args): Promise<void> => {
+        const { playlistId } = args;
+
+        // Validate the playlist exists
+        const playlist: Doc<"playlists"> = await ctx.runQuery(api.playlistActions.getPlaylist, { playlistId });
+        if (!playlist) {    
+            throw new Error("Playlist not found");
+        }
+
+        // Delete the playlist from Spotify
+        const tokenData = await ctx.runQuery(api.spotifyAuth.getSpotifyTokensById, { userId: playlist.userId });
+        if (!tokenData) {
+            throw new Error("User not authenticated with Spotify");
+        }
+
+        const accessToken = tokenData.accessToken;
+
+        const deleteRes = await fetch(`https://api.spotify.com/v1/playlists/${playlist.spotifyPlaylistId}/followers`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        if (!deleteRes.ok) {
+            const err = await deleteRes.text();
+            throw new Error(`Failed to delete Spotify playlist: ${err}`);
+        }
+    },
 });

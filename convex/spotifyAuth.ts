@@ -180,7 +180,7 @@ export const getSpotifyTokensByToken = query({
 
 export const refreshSpotifyToken = action({
   args: {},
-  handler: async (ctx): Promise<string> => {
+  handler: async (ctx): Promise<{ accessToken: string; spotifyUserId: string }> => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
     const tokens = await ctx.runQuery(api.spotifyAuth.getSpotifyTokens);
@@ -208,7 +208,7 @@ export const refreshSpotifyToken = action({
       spotifyDisplayName: tokens.spotifyDisplayName,
       userId: userId as any,
     });
-    return data.access_token;
+    return { accessToken: data.access_token, spotifyUserId: data.spotifyUserId };
   },
 });
 

@@ -26,6 +26,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
     spotifyPlaylistId: v.optional(v.string()), // For Spotify integration
+    spotifyPlaylistUrl: v.optional(v.string()), // For Spotify integration
   }).index("byUserId", ["userId"]),
 
   playlistTracks: defineTable({

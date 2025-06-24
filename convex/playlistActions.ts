@@ -1,5 +1,6 @@
 import { api } from "./_generated/api";
-import { query } from "./_generated/server";
+import type { Id } from "./_generated/dataModel";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const getAllPlaylists = query({
@@ -28,6 +29,22 @@ export const getAllPlaylists = query({
     },
 });
 
+export const getPlaylist = query({
+    args: {
+        playlistId: v.id("playlists"),
+    },
+    handler: async (ctx, args : { playlistId: Id<"playlists"> }) => {
+        const playlist = await ctx.db
+            .query("playlists").filter((q) => q.eq(q.field("_id"), args.playlistId)).first();
+        
+        if (!playlist) {
+            throw new Error("Playlist not found");
+        }
+
+        return playlist;
+    }
+});
+
 export const getPlaylistTracksFromId = query({
     args: {
         playlistId: v.id("playlists")
@@ -53,4 +70,54 @@ export const getPlaylistTracksFromId = query({
         
         return tracks;
     },
+});
+
+export const addPlaylistSpotifyLink = mutation({
+    args: {
+        playlistId: v.id("playlists"),
+        spotifyPlaylistId: v.string(),
+        spotifyPlaylistUrl: v.string(),
+    },
+    handler: async (ctx, args): Promise<void> => { 
+        const { playlistId, spotifyPlaylistId, spotifyPlaylistUrl } = args;
+
+        // Validate the playlist exists
+        const playlist = await ctx.db
+            .query("playlists")
+            .filter((q) => q.eq(q.field("_id"), playlistId))
+            .first();
+        
+        if (!playlist) {
+            throw new Error("Playlist not found");
+        }
+
+        // Update the playlist with Spotify details
+        return await ctx.db.patch(playlistId, {
+            spotifyPlaylistId,
+            spotifyPlaylistUrl,
+            updatedAt: Date.now(),
+        });
+    }
+});
+
+export const deletePlaylist = mutation({
+    args: {
+        playlistId: v.id("playlists"),
+    },
+    handler: async (ctx, args): Promise<void> => { 
+        const { playlistId } = args;
+
+        // Validate the playlist exists
+        const playlist = await ctx.db
+            .query("playlists")
+            .filter((q) => q.eq(q.field("_id"), playlistId))
+            .first();
+        
+        if (!playlist) {
+            throw new Error("Playlist not found");
+        }
+
+        // Delete the playlist
+        await ctx.db.delete(playlistId);
+    }
 });
