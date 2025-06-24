@@ -130,6 +130,7 @@ export const getSpotifyTokens = query({
   args: {},
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
+    // console.log("Fetching Spotify tokens for user:", userId);
     if (!userId) return null;
     return await ctx.db
       .query("spotifyTokens")
@@ -137,6 +138,49 @@ export const getSpotifyTokens = query({
       .unique();
   },
 });
+
+export const getSpotifyTokensByToken = query({
+  args: {
+    token: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // Validate the token by checking the session
+    // console.log("Validating session for token:", args.token);
+    if (!args.token) throw new Error("Token is required");
+
+    // const test = 
+    
+    // console.log(test);
+
+    const session = await ctx.db.query("sessions").
+      withIndex("byToken", (q) => q.eq("token", args.token)).first();
+    
+    // console.log("Session for token:", session);
+    if (!session || session.expiresAt < Date.now()) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = session.userId;
+    // console.log("Fetching Spotify tokens for user:", userId);
+
+    if (!userId) return null;
+    return await ctx.db
+      .query("spotifyTokens")
+      .withIndex("byUserId", (q) => q.eq("userId", userId as any))
+      .unique();
+  },
+});
+
+// export const getUserSpotifytokenId = query({
+//   args: {},
+//   handler: async (ctx) => {
+//     const userId = await getAuthUserId(ctx);
+//     if (!userId) return null;
+    
+//     return await ctx.db.query("spotifyTokens")
+//     .withIndex("byUserId", (q) => q.eq("userId", userId as any))
+//   },
+// });
 
 export const refreshSpotifyToken = action({
   args: {},

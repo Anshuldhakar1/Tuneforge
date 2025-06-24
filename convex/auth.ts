@@ -21,29 +21,22 @@ type AuthResult = {
   userId: string;
 };
 
-// Helper function to get authenticated user ID from context
 export async function getAuthUserId(ctx: any): Promise<string | null> {
-  // Try to get token from different sources
   let token: string | null = null;
   
-  // For HTTP requests (router context)
   if (ctx.request) {
     const authHeader = ctx.request.headers.get("Authorization");
     token = authHeader?.replace("Bearer ", "") || null;
     
-    // Also check URL params for token (useful for some scenarios)
     if (!token) {
       const url = new URL(ctx.request.url);
       token = url.searchParams.get("token");
     }
   }
   
-  // For regular convex context with auth header
   if (!token && ctx.auth) {
-    // If using Convex auth system
     const identity = await ctx.auth.getUserIdentity();
     if (identity) {
-      // Find user by email or subject
       const user = await ctx.db
         .query("users")
         .withIndex("byEmail", (q: any) => q.eq("email", identity.email))
@@ -54,7 +47,6 @@ export async function getAuthUserId(ctx: any): Promise<string | null> {
   
   if (!token) return null;
   
-  // Find session by token
   const session = await ctx.db
     .query("sessions")
     .withIndex("byToken", (q:any) => q.eq("token", token))
@@ -67,7 +59,6 @@ export async function getAuthUserId(ctx: any): Promise<string | null> {
   return session.userId;
 }
 
-// Signup action (uses bcrypt, so must be an action)
 export const signup = action({
   args: {
     email: v.string(),
@@ -100,22 +91,20 @@ export const signup = action({
   },
 });
 
-// Signin action (uses bcrypt, so must be an action)
 export const signin = action({
   args: {
     username: v.string(),
     password: v.string(),
   },
   handler: async (ctx, args: SigninArgs): Promise<AuthResult> => {
-    // Find user by username
+    
     const user = await ctx.runQuery(api.auth.getUserByUsername, { username: args.username });
     if (!user) throw new Error("Invalid username or password");
 
-    // Verify password (this is why we need an action)
+    
     const valid = await bcrypt.compare(args.password, user.passwordHash);
     if (!valid) throw new Error("Invalid username or password");
 
-    // Create new session via mutation
     const result = await ctx.runMutation(api.auth.createSession, { userId: user._id });
     return result;
   },

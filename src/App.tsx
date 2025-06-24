@@ -6,9 +6,11 @@ import Playlist from './pages/Playlist.tsx';
 import Login from './pages/Login.tsx';
 import Background from './components/app/Background.tsx';
 import Header from './components/app/Header.tsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster } from 'sonner';
 import { useAuth } from './auth/AuthContext.tsx';
+import { useQuery } from "convex/react";
+import { api } from "../convex/_generated/api";
 
 type ProtectedLayoutProps = {
   isSpotifyConnected: boolean;
@@ -38,6 +40,24 @@ function ProtectedLayout({ isSpotifyConnected, setIsSpotifyConnected, user, sign
 function App() {
   const { user, signout, loading } = useAuth();
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
+
+  // Get session token from localStorage
+  const sessionToken = typeof window !== "undefined" ? localStorage.getItem("session_token") : null;
+
+  // Query for user's Spotify tokens
+  const userSpotifytokens = useQuery(
+    api.spotifyAuth.getSpotifyTokensByToken,
+    sessionToken ? { token: sessionToken } : "skip"
+  );
+
+  // Set isSpotifyConnected based on token presence
+  useEffect(() => {
+    if (userSpotifytokens && userSpotifytokens.accessToken) {
+      setIsSpotifyConnected(true);
+    } else {
+      setIsSpotifyConnected(false);
+    }
+  }, [userSpotifytokens]);
 
   // Optional: show a loading spinner while checking auth
   if (loading) {

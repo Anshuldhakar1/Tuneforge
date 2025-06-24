@@ -102,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             const res = await signinAction(args);
             setToken(res.token);
+            console.log("Signin successful, set the session token");
             localStorage.setItem("session_token", res.token);
             // Don't setLoading(false) here, let useEffect handle it after sessionData updates
         } catch (err) {
@@ -116,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setToken(null);
         setError(null);
         setLoading(false); // Ensure loading is false when signing out
+        console.log("Signing out, removing session token");
         localStorage.removeItem("session_token");
     };
 

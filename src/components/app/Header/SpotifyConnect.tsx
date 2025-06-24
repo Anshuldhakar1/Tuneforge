@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SpotifyLogo from "./SpotifyLogo";
 import { toast } from "sonner";
-import { useMutation, useAction, useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
 interface SpotifyConnectProps {
@@ -18,7 +18,7 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
     api.spotifyAuth.getSpotifyAuthUrl, 
     token ? { token } : "skip"
   );
-  const exchangeSpotifyCode = useAction(api.spotifyAuth.exchangeSpotifyCode);
+  // const exchangeSpotifyCode = useAction(api.spotifyAuth.exchangeSpotifyCode);
   const disconnectSpotify = useMutation(api.spotifyAuth.disconnectSpotify);
 
   const [isHovered, setIsHovered] = React.useState(false);
