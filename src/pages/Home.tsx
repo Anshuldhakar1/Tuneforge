@@ -19,7 +19,7 @@ import ThreeColumnLayout from "../components/app/Home/ThreeColumnLayout";
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface HomeProps {
   user: {
