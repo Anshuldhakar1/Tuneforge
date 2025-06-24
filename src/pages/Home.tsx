@@ -16,6 +16,10 @@ import CuratedPlaylistsSection from "../components/app/Home/CuratedPlaylistsSect
 import HeaderSection from "../components/app/Home/HeaderSection";
 import LoadingScreen from "../components/app/Home/LoadingScreen";
 import ThreeColumnLayout from "../components/app/Home/ThreeColumnLayout";
+import { useAction } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { toast } from "sonner";
+// import { openAIGenerate } from "../../convex/openai";
 
 interface HomeProps {
   user: {
@@ -31,6 +35,9 @@ const Home = ({ user, loading }: HomeProps) => {
   const [playlistName, setPlaylistName] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
+
+  const generate = useAction(api.gemini.aiGenerate);
+
 
   const curatedPlaylists: CuratedPlaylist[] = [
     {
@@ -110,10 +117,26 @@ const Home = ({ user, loading }: HomeProps) => {
   const handleGenerate = async () => {
     if (!description.trim()) return
     setIsGenerating(true)
-    setTimeout(() => {
-      setIsGenerating(false)
-      console.log("Generated playlist:", { description, playlistName })
-    }, 2000)
+    
+    const sessionToken = localStorage.getItem("session_token");
+    if (!sessionToken) {  
+      console.error("No session token found");
+      setIsGenerating(false);
+      return;
+    }
+
+    try {
+      const result = await generate({ prompt: description, token: sessionToken });
+      console.log("AI generation result: ", result);
+      toast
+        .success("Playlist generated successfully!", {
+          description: `Generated ${result.length} tracks. Check your playlists for the new tracks.`,
+        });
+    } catch (error) {
+      console.error("Error in generation: ", error);
+    } finally {
+      setIsGenerating(false);
+    }
   }
 
   const handleCuratedClick = (playlist: CuratedPlaylist) => {
@@ -142,6 +165,8 @@ const Home = ({ user, loading }: HomeProps) => {
           curatedPlaylists={curatedPlaylists}
           handleCuratedClick={handleCuratedClick}
         />
+
+        
       </div>
     </div>
   )

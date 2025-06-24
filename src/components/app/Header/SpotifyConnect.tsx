@@ -73,7 +73,7 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
     
     if (isSpotifyConnected) {
       try {
-        await disconnectSpotify({});
+        await disconnectSpotify({ token });
         setSpotifyConnected(false);
         toast.success("Disconnected from Spotify");
       } catch (error) {

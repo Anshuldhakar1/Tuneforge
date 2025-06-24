@@ -139,18 +139,25 @@ export const getSpotifyTokens = query({
   },
 });
 
+export const getSpotifyTokensById = query({
+  args: {
+    userId: v.id("users"),
+  },
+  handler: async (ctx,args) => {
+    return await ctx.db
+      .query("spotifyTokens")
+      .withIndex("byUserId", (q) => q.eq("userId", args.userId ))
+      .unique();
+  },
+});
+
 export const getSpotifyTokensByToken = query({
   args: {
     token: v.string(),
   },
   handler: async (ctx, args) => {
-    // Validate the token by checking the session
     // console.log("Validating session for token:", args.token);
     if (!args.token) throw new Error("Token is required");
-
-    // const test = 
-    
-    // console.log(test);
 
     const session = await ctx.db.query("sessions").
       withIndex("byToken", (q) => q.eq("token", args.token)).first();
@@ -170,17 +177,6 @@ export const getSpotifyTokensByToken = query({
       .unique();
   },
 });
-
-// export const getUserSpotifytokenId = query({
-//   args: {},
-//   handler: async (ctx) => {
-//     const userId = await getAuthUserId(ctx);
-//     if (!userId) return null;
-    
-//     return await ctx.db.query("spotifyTokens")
-//     .withIndex("byUserId", (q) => q.eq("userId", userId as any))
-//   },
-// });
 
 export const refreshSpotifyToken = action({
   args: {},
@@ -217,13 +213,25 @@ export const refreshSpotifyToken = action({
 });
 
 export const disconnectSpotify = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
+  args: {
+    token: v.string(),
+  },
+  handler: async (ctx, args) => {
+    if (!args.token) throw new Error("Token is required");
+
+    const session = await ctx.db.query("sessions").
+      withIndex("byToken", (q) => q.eq("token", args.token)).first();
+    
+    // console.log("Session for token:", session);
+    if (!session || session.expiresAt < Date.now()) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = session.userId;
+
     const tokens = await ctx.db
       .query("spotifyTokens")
-      .withIndex("byUserId", (q) => q.eq("userId", userId as any))
+      .withIndex("byUserId", (q) => q.eq("userId", userId))
       .unique();
     if (tokens) await ctx.db.delete(tokens._id);
   },

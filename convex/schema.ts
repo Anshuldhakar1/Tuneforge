@@ -40,6 +40,7 @@ export default defineSchema({
     title: v.string(),
     artist: v.string(),
     album: v.optional(v.string()),
+    genre: v.array(v.string()),
     durationMs: v.optional(v.number()),
     spotifyTrackId: v.optional(v.string()),
     coverUrl: v.optional(v.string()),

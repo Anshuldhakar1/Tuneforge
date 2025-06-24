@@ -41,16 +41,13 @@ function App() {
   const { user, signout, loading } = useAuth();
   const [isSpotifyConnected, setIsSpotifyConnected] = useState(false);
 
-  // Get session token from localStorage
   const sessionToken = typeof window !== "undefined" ? localStorage.getItem("session_token") : null;
 
-  // Query for user's Spotify tokens
   const userSpotifytokens = useQuery(
     api.spotifyAuth.getSpotifyTokensByToken,
     sessionToken ? { token: sessionToken } : "skip"
   );
 
-  // Set isSpotifyConnected based on token presence
   useEffect(() => {
     if (userSpotifytokens && userSpotifytokens.accessToken) {
       setIsSpotifyConnected(true);
@@ -59,7 +56,6 @@ function App() {
     }
   }, [userSpotifytokens]);
 
-  // Optional: show a loading spinner while checking auth
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

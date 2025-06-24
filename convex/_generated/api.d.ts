@@ -14,7 +14,10 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as gemini from "../gemini.js";
 import type * as http from "../http.js";
+import type * as playlists from "../playlists.js";
+import type * as spotify from "../spotify.js";
 import type * as spotifyAuth from "../spotifyAuth.js";
 
 /**
@@ -27,7 +30,10 @@ import type * as spotifyAuth from "../spotifyAuth.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  gemini: typeof gemini;
   http: typeof http;
+  playlists: typeof playlists;
+  spotify: typeof spotify;
   spotifyAuth: typeof spotifyAuth;
 }>;
 export declare const api: FilterApi<
