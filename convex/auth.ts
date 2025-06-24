@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import { nanoid } from "nanoid";
 import * as bcrypt from "bcryptjs";
 import { api } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 
 // --- Types for args and return values ---
 type SignupArgs = {
@@ -252,5 +253,17 @@ export const signout = mutation({
     }
     
     return { success: true };
+  },
+});
+
+export const getUserBySessionToken = query({
+  args: { token: v.string() },
+  handler: async (ctx, args): Promise<Id<"users"> | null> => {
+    const r = await ctx.db
+      .query("sessions")
+      .withIndex("byToken", (q) => q.eq("token", args.token))
+      .first();
+
+    return r ? r.userId : null;
   },
 });

@@ -19,6 +19,7 @@ import ThreeColumnLayout from "../components/app/Home/ThreeColumnLayout";
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
+import { Navigate, useNavigate } from "react-router-dom";
 
 interface HomeProps {
   user: {
@@ -130,6 +131,13 @@ const Home = ({ user, loading }: HomeProps) => {
         .success("Playlist generated successfully!", {
           description: `Generated ${result.length} tracks. Check your playlists for the new tracks.`,
         });
+      
+      // navigate to your playlists when generation is complete
+      const navigate = useNavigate();
+      setTimeout(() => {
+        navigate("/playlists");
+      }, 2000);
+      
     } catch (error) {
       console.error("Error in generation: ", error);
     } finally {

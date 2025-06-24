@@ -47,6 +47,7 @@ function Playlists({ user }: PlaylistsProps) {
   const [likedPlaylists, setLikedPlaylists] = useState<string[]>([]);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [deleteModal, setDeleteModal] = useState<null | string>(null);
+  const [playlists] = useState(staticPlaylists); // Can be replaced with actual data fetching
 
   const toggleLike = (playlistId: string) => {
     setLikedPlaylists((prev) =>
@@ -57,7 +58,11 @@ function Playlists({ user }: PlaylistsProps) {
   };
 
   const filteredPlaylists = useMemo(() => {
-    return staticPlaylists.filter((playlist) => {
+    if (!playlists || playlists.length === 0) {
+      return [];
+    }
+
+    return playlists.filter((playlist) => {
       const matchesSearch =
         playlist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (playlist.description || "")
@@ -68,7 +73,7 @@ function Playlists({ user }: PlaylistsProps) {
         : true;
       return matchesSearch && matchesFavorites;
     });
-  }, [searchQuery, showFavoritesOnly, likedPlaylists]);
+  }, [playlists, searchQuery, showFavoritesOnly, likedPlaylists]);
 
   return (
     <main
@@ -146,7 +151,7 @@ function Playlists({ user }: PlaylistsProps) {
             : "flex flex-col gap-3"
         }
       >
-        {filteredPlaylists.map((playlist) => (
+        {filteredPlaylists.length > 0 && filteredPlaylists.map((playlist) => (
           <PlaylistCard
             key={playlist._id}
             playlist={playlist}
@@ -171,7 +176,7 @@ function Playlists({ user }: PlaylistsProps) {
               ? "Try adjusting your search terms"
               : showFavoritesOnly
                 ? "No favorite playlists found"
-                : "Your playlists will appear here"}
+                : "Create your first playlist to get started"}
           </p>
         </div>
       )}

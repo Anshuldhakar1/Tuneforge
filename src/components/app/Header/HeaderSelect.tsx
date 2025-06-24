@@ -74,6 +74,7 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                     <Link
                         to={`/playlists`}
                         className="flex items-center w-full px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors gap-2"
+                        onClick={() => setOpen(false)}
                     >
                         <ListMusic size={18} className="text-green-500" />
                         My Playlists

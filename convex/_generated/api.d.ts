@@ -16,7 +16,8 @@ import type {
 import type * as auth from "../auth.js";
 import type * as gemini from "../gemini.js";
 import type * as http from "../http.js";
-import type * as playlists from "../playlists.js";
+import type * as playlistActions from "../playlistActions.js";
+import type * as playlistCreation from "../playlistCreation.js";
 import type * as spotify from "../spotify.js";
 import type * as spotifyAuth from "../spotifyAuth.js";
 
@@ -32,7 +33,8 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   gemini: typeof gemini;
   http: typeof http;
-  playlists: typeof playlists;
+  playlistActions: typeof playlistActions;
+  playlistCreation: typeof playlistCreation;
   spotify: typeof spotify;
   spotifyAuth: typeof spotifyAuth;
 }>;

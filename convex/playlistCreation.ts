@@ -1,4 +1,4 @@
-import { action, mutation } from "./_generated/server";
+import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
 // import type { Id } from "./_generated/dataModel";
@@ -18,7 +18,7 @@ export const createPlayList = action({
         throw new Error("Token is required");
       }
 
-      const session = await ctx.runMutation(api.playlists.getSessionByToken, { 
+      const session = await ctx.runQuery(api.playlistCreation.getSessionByToken, { 
         token 
       });
 
@@ -28,7 +28,7 @@ export const createPlayList = action({
 
       const userId = session.userId;
 
-      const playlistId = await ctx.runMutation(api.playlists.insertPlaylist, {
+      const playlistId = await ctx.runMutation(api.playlistCreation.insertPlaylist, {
         userId: userId,
         name:  args.playlistName !== "" ? args.playlistName : response.playlist.name,
         description: response.playlist.description,
@@ -52,7 +52,7 @@ export const createPlayList = action({
 
         if (track.spotifyURI) {
           
-          const trackId = await ctx.runMutation(api.playlists.insertTrack, {
+          const trackId = await ctx.runMutation(api.playlistCreation.insertTrack, {
             title: response.playlist.tracks[i].title,
             artist: response.playlist.tracks[i].artist,
             album: response.playlist.tracks[i].album,
@@ -84,7 +84,7 @@ export const createPlayList = action({
 
       // Link the tracks and the playlists
       for (const trackId of actualTracks) {
-        await ctx.runMutation(api.playlists.insertPlaylistTrack, {
+        await ctx.runMutation(api.playlistCreation.insertPlaylistTrack, {
           playlistId: playlistId,
           trackId: trackId,
           addedAt: Date.now(),
@@ -137,7 +137,7 @@ export const insertPlaylist = mutation({
     },
   });
   
-  export const getSessionByToken = mutation({
+  export const getSessionByToken = query({
     args: { token: v.string() },
     handler: async (ctx, args) => {
       return await ctx.db
