@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import SpotifyLogo from "./SpotifyLogo";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "convex/react";
