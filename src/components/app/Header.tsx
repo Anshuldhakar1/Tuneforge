@@ -16,7 +16,7 @@ interface HeaderProps {
 
 const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: HeaderProps) => {
     return (
-        <header className="relative mx-2 mt-4 px-8 py-4 rounded-2xl ">
+        <header className="relative mx-2 mt-4 px-8 py-4 rounded-2xl" style={{ zIndex: 100 }}>
             {/* Minimal decorative background elements */}
             <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                 <div className="absolute inset-0 bg-gradient-to-r from-[#31c266]/2 via-transparent to-[#31c266]/2" />
@@ -35,7 +35,7 @@ const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: Head
                     </Link>
                 </div>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4" style={{ position: 'relative' }}>
                     <SpotifyConnect 
                         isSpotifyConnected={isSpotifyConnected} 
                         setSpotifyConnected={setSpotifyConnected} 
