@@ -15,7 +15,7 @@ import type { CuratedPlaylist } from "../components/app/Home/CuratedPlaylistCard
 import CuratedPlaylistsSection from "../components/app/Home/CuratedPlaylistsSection";
 import HeaderSection from "../components/app/Home/HeaderSection";
 import LoadingScreen from "../components/app/Home/LoadingScreen";
-import ThreeColumnLayout from "../components/app/Home/ThreeColumnLayout";
+import HomeMidSection from "../components/app/Home/HomeMidSection";
 import { useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
@@ -28,9 +28,10 @@ interface HomeProps {
     userId: string
   } | null
   loading: boolean
+  isSpotifyConnected: boolean
 }
 
-const Home = ({ user, loading }: HomeProps) => {
+const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
   const [description, setDescription] = useState("")
   const [playlistName, setPlaylistName] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
@@ -153,26 +154,75 @@ const Home = ({ user, loading }: HomeProps) => {
   if (loading) return <LoadingScreen />
 
   return (
-    <div className="min-h-screen relative overflow-hidden ">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-12">
-        <HeaderSection />
-        {user && ( <span></span> )}
-        <ThreeColumnLayout
-          description={description}
-          setDescription={setDescription}
-          playlistName={playlistName}
-          setPlaylistName={setPlaylistName}
-          isGenerating={isGenerating}
-          handleGenerate={handleGenerate}
-          focusedInput={focusedInput}
-          setFocusedInput={setFocusedInput}
-        />
-        <CuratedPlaylistsSection
-          curatedPlaylists={curatedPlaylists}
-          handleCuratedClick={handleCuratedClick}
-        />
+    <div className="min-h-screen relative overflow-hidden">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 py-8">
+        {/* Enhanced container with new styling */}
+        <main className="w-full mx-auto p-8 relative overflow-hidden">
+          {/* Decorative background elements */}
+          <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#31c266]/3 via-transparent to-[#31c266]/5" />
+            <div className="absolute top-8 right-12 w-4 h-4 bg-[#31c266]/20 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
+            <div className="absolute top-20 right-20 w-2 h-2 bg-[#31c266]/30 rounded-full animate-bounce" style={{ animationDelay: '1s' }} />
+            <div className="absolute bottom-16 left-12 w-3 h-3 bg-[#31c266]/20 rounded-full animate-bounce" style={{ animationDelay: '1.5s' }} />
+            <div className="absolute bottom-32 left-20 w-1 h-1 bg-[#31c266]/40 rounded-full animate-bounce" style={{ animationDelay: '2s' }} />
+          </div>
 
-        
+          {/* Enhanced SVG background */}
+          <svg
+            aria-hidden="true"
+            className="absolute inset-0 w-full h-full pointer-events-none select-none opacity-60"
+            style={{ zIndex: 0 }}
+            width="100%"
+            height="100%"
+            viewBox="0 0 1440 900"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="homeWaveGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop stopColor="#31c266" stopOpacity="0.08" />
+                <stop offset="1" stopColor="#31c266" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0 600 Q 360 500 720 600 T 1440 600 V900 H0 Z"
+              fill="url(#homeWaveGradient)"
+            />
+            <path
+              d="M0 500 Q 360 400 720 500 T 1440 500 V900 H0 Z"
+              fill="url(#homeWaveGradient)"
+              opacity="0.6"
+            />
+          </svg>
+
+          <div className="relative z-10">
+            <HeaderSection />
+            <HomeMidSection
+              description={description}
+              setDescription={setDescription}
+              playlistName={playlistName}
+              setPlaylistName={setPlaylistName}
+              isGenerating={isGenerating}
+              handleGenerate={handleGenerate}
+              focusedInput={focusedInput}
+              setFocusedInput={setFocusedInput}
+              isSpotifyConnected={isSpotifyConnected}
+            />
+            
+            {/* Enhanced curated playlists section */}
+            <div className="mt-16 relative">
+              <div className="absolute -left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-[#31c266]/50 to-transparent rounded-full" />
+              <CuratedPlaylistsSection
+                curatedPlaylists={curatedPlaylists}
+                handleCuratedClick={handleCuratedClick}
+              />
+            </div>
+          </div>
+
+          {/* Bottom accent line only */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#31c266]/30 to-transparent rounded-b-3xl" />
+        </main>
       </div>
     </div>
   )

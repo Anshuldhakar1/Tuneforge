@@ -1,25 +1,16 @@
-import { api } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const getAllPlaylists = query({
     args: {
-        token: v.string(),
+        userId: v.id("users"),
     },
-    handler: async (ctx, args: { token: string }): Promise<any> => {
+    handler: async (ctx, args: { userId: Id<"users"> }): Promise<any> => {
 
-        const { token } = args;
-        
-        if (!token) {
-            console.log("❌ Token is missing");
-            throw new Error("Token is required");
-        }
-
-        const userId = await ctx.runQuery(api.auth.getUserBySessionToken, { token });
-
+        const { userId } = args;
         if (!userId) {
-            throw new Error("Invalid session token");
+            throw new Error("Invalid user ID");
         }
 
         return await ctx.db

@@ -16,20 +16,39 @@ interface HeaderProps {
 
 const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: HeaderProps) => {
     return (
-        <header className=" text-white p-4 flex justify-between items-center m-2 px-12">
-            <div className="bg-white flex items-center">
-                <Link to="/" className="flex items-center scale-[1.2] hover:opacity-80 transition-opacity">
-                    <AppLogo className="w-8 h-8 text-white fill-white ml-0.5" />
-                    <span className="ml-2 text-lg text-black relative top-[-2px] font-semibold">TuneForger</span>
-                </Link>
-            </div>
-            <div className="relative left-4">
-                <SpotifyConnect isSpotifyConnected={isSpotifyConnected} setSpotifyConnected={setSpotifyConnected} className="text-black" />
+        <header className="relative mx-2 mt-4 px-8 py-4 rounded-2xl ">
+            {/* Minimal decorative background elements */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#31c266]/2 via-transparent to-[#31c266]/2" />
             </div>
 
-            <div>
-                <HeaderSelect user={user} signout={signout} className="text-black"/>
-            </div> 
+            <div className="relative z-10 flex justify-between items-center">
+                <div className="flex items-center bg-white/80">
+                    <Link to="/" className="flex items-center">
+                        <AppLogo className="w-10 h-10 text-[#31c266] drop-shadow-sm" />
+                        <div className="ml-3">
+                            <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-[#31c266] to-gray-700 dark:from-white dark:via-[#31c266] dark:to-gray-300 bg-clip-text text-transparent">
+                                TuneForger
+                            </span>
+                            <div className="w-8 h-0.5 bg-gradient-to-r from-[#31c266] to-transparent rounded-full mt-0.5" />
+                        </div>
+                    </Link>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <SpotifyConnect 
+                        isSpotifyConnected={isSpotifyConnected} 
+                        setSpotifyConnected={setSpotifyConnected} 
+                        className="text-gray-700 dark:text-gray-300" 
+                    />
+                    <HeaderSelect 
+                        user={user} 
+                        signout={signout} 
+                        className="text-gray-700 dark:text-gray-300"
+                    />
+                </div>
+            </div>
+
         </header>
     );
 };

@@ -11,6 +11,7 @@ import { Toaster } from 'sonner';
 import { useAuth } from './auth/AuthContext.tsx';
 import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
+import type { Id } from "../convex/_generated/dataModel";
 
 type ProtectedLayoutProps = {
   isSpotifyConnected: boolean;
@@ -18,7 +19,7 @@ type ProtectedLayoutProps = {
   user: {
     username: string;
     email: string;
-    userId: string;
+    userId: Id<"users">;
   };
   signout: () => void;
 };
@@ -82,7 +83,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/" element={<Home user={user!} loading={loading}  />} />
+          <Route path="/" element={<Home user={user!} loading={loading} isSpotifyConnected={isSpotifyConnected} />} />
           <Route path="/playlists" element={<Playlists user={user!} />} />
           <Route path="/playlist/:playlistId" element={<Playlist user={user!} />} />
         </Route>
