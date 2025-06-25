@@ -57,6 +57,12 @@ function Playlists({ user }: PlaylistsProps) {
     );
   };
 
+  // const fetchPlaylists = use
+
+  // useEffect(() => {
+  //   const 
+  //  }, []);
+
   const filteredPlaylists = useMemo(() => {
     if (!playlists || playlists.length === 0) {
       return [];

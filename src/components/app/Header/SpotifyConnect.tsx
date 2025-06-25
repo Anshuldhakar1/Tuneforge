@@ -18,10 +18,23 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
     api.spotifyAuth.getSpotifyAuthUrl, 
     token ? { token } : "skip"
   );
-  // const exchangeSpotifyCode = useAction(api.spotifyAuth.exchangeSpotifyCode);
+
+  // Check actual Spotify connection status
+  const spotifyConnectionStatus = useQuery(
+    api.spotifyAuth.isSpotifyConnected,
+    token ? { token } : "skip"
+  );
+
   const disconnectSpotify = useMutation(api.spotifyAuth.disconnectSpotify);
 
   const [isHovered, setIsHovered] = React.useState(false);
+
+  // Update the connection status when it changes
+  React.useEffect(() => {
+    if (spotifyConnectionStatus !== undefined) {
+      setSpotifyConnected(spotifyConnectionStatus);
+    }
+  }, [spotifyConnectionStatus, setSpotifyConnected]);
 
   const openSpotifyPopup = async () => {
     if (!token || !getSpotifyAuthUrl) {

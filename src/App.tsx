@@ -43,18 +43,16 @@ function App() {
 
   const sessionToken = typeof window !== "undefined" ? localStorage.getItem("session_token") : null;
 
-  const userSpotifytokens = useQuery(
-    api.spotifyAuth.getSpotifyTokensByToken,
+  const spotifyConnectionStatus = useQuery(
+    api.spotifyAuth.isSpotifyConnected,
     sessionToken ? { token: sessionToken } : "skip"
   );
 
   useEffect(() => {
-    if (userSpotifytokens && userSpotifytokens.accessToken) {
-      setIsSpotifyConnected(true);
-    } else {
-      setIsSpotifyConnected(false);
+    if (spotifyConnectionStatus !== undefined) {
+      setIsSpotifyConnected(spotifyConnectionStatus);
     }
-  }, [userSpotifytokens]);
+  }, [spotifyConnectionStatus]);
 
   if (loading) {
     return (

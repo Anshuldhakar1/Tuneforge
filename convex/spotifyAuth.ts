@@ -178,6 +178,41 @@ export const getSpotifyTokensByToken = query({
   },
 });
 
+export const isSpotifyConnected = query({
+  args: {
+    token: v.string(),
+  },
+  handler: async (ctx, args) => {
+    if (!args.token) return false;
+
+    const session = await ctx.db.query("sessions").
+      withIndex("byToken", (q) => q.eq("token", args.token)).first();
+    
+    if (!session || session.expiresAt < Date.now()) {
+      return false;
+    }
+
+    const userId = session.userId;
+    if (!userId) return false;
+
+    const spotifyTokens = await ctx.db
+      .query("spotifyTokens")
+      .withIndex("byUserId", (q) => q.eq("userId", userId as any))
+      .unique();
+
+    // Check if tokens exist AND are not expired
+    if (!spotifyTokens || !spotifyTokens.accessToken) {
+      return false;
+    }
+
+    // Check if tokens are expired (with some buffer time)
+    const currentTime = Date.now();
+    const bufferTime = 5 * 60 * 1000; // 5 minutes buffer
+    
+    return spotifyTokens.expiresAt > (currentTime + bufferTime);
+  },
+});
+
 export const refreshSpotifyToken = action({
   args: {},
   handler: async (ctx): Promise<{ accessToken: string; spotifyUserId: string }> => {
