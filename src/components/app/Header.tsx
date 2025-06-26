@@ -34,13 +34,15 @@ const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: Head
                         </div>
                     </Link>
                 </div>
+                
+                <SpotifyConnect
+                    isSpotifyConnected={isSpotifyConnected}
+                    setSpotifyConnected={setSpotifyConnected}
+                    className="text-gray-700 dark:text-gray-300"
+                />
 
                 <div className="flex items-center gap-4" style={{ position: 'relative' }}>
-                    <SpotifyConnect 
-                        isSpotifyConnected={isSpotifyConnected} 
-                        setSpotifyConnected={setSpotifyConnected} 
-                        className="text-gray-700 dark:text-gray-300" 
-                    />
+                    
                     <HeaderSelect 
                         user={user} 
                         signout={signout} 

@@ -155,7 +155,7 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <div className="relative z-10 max-w-7xl mx-auto px-2 py-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 pt-2 pb-8">
         {/* Enhanced container with new styling */}
         <main className="w-full mx-auto p-8 relative overflow-hidden">
           {/* Decorative background elements */}
