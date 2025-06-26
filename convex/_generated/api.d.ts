@@ -21,6 +21,7 @@ import type * as playlistCreation from "../playlistCreation.js";
 import type * as spotify from "../spotify.js";
 import type * as spotifyAuth from "../spotifyAuth.js";
 import type * as spotifyCreate from "../spotifyCreate.js";
+import type * as spotifyTrackEnrichment from "../spotifyTrackEnrichment.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   spotify: typeof spotify;
   spotifyAuth: typeof spotifyAuth;
   spotifyCreate: typeof spotifyCreate;
+  spotifyTrackEnrichment: typeof spotifyTrackEnrichment;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
