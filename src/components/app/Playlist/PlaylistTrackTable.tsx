@@ -1,21 +1,19 @@
 import { Clock, Trash2, Music } from "lucide-react";
 import clsx from "clsx";
 
-type Track = {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  genre: string;
-  duration: string;
-};
-
 type PlaylistTrackTableProps = {
-  tracks: Track[];
-  genreColors: Record<string, string>;
+  tracks: Array<{
+    id: string;
+    title: string;
+    artist: string;
+    album: string;
+    genre: string;
+    duration: string;
+  }>;
+  getGenreColor: (genre: string) => string;
 };
 
-export function PlaylistTrackTable({ tracks, genreColors }: PlaylistTrackTableProps) {
+export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTableProps) {
   return (
     <div className="mt-8 bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-xl border border-[#31c266]/20 dark:border-gray-700 overflow-hidden backdrop-blur-xl">
       <table className="min-w-full text-left">
@@ -63,15 +61,15 @@ export function PlaylistTrackTable({ tracks, genreColors }: PlaylistTrackTablePr
               <td className="py-3 px-4 text-gray-700 dark:text-gray-300 text-base font-medium">
                 {track.album}
               </td>
-              <td className="py-3 px-4">
-                <span
-                  className={clsx(
-                    "px-3 py-1.5 rounded-full text-xs font-bold shadow-sm",
-                    genreColors[track.genre] || "bg-gray-100 text-gray-700"
-                  )}
-                >
-                  {track.genre}
-                </span>
+              <td className="py-3 px-4 whitespace-nowrap">
+                <div className="flex items-center">
+                  <span
+                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide ${getGenreColor(track.genre)}`}
+                    title={`Genre: ${track.genre}`}
+                  >
+                    {track.genre}
+                  </span>
+                </div>
               </td>
               <td className="py-3 px-4 text-gray-700 dark:text-gray-300 text-base font-medium">
                 {track.duration}

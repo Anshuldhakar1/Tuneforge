@@ -19,17 +19,36 @@ interface PlaylistProps {
     isSpotifyConnected: boolean;
 }
 
-const genreColors: Record<string, string> = {
-    "Lo-Fi Hip Hop": "bg-purple-100 text-purple-700",
-    Ambient: "bg-indigo-100 text-indigo-700",
-    "Hip Hop": "bg-orange-100 text-orange-700",
-    Electronic: "bg-blue-100 text-blue-700",
-    Rock: "bg-red-100 text-red-700",
-    Pop: "bg-pink-100 text-pink-700",
-    Jazz: "bg-yellow-100 text-yellow-700",
-    Classical: "bg-gray-100 text-gray-700",
-    "R&B": "bg-purple-100 text-purple-700",
-    Country: "bg-green-100 text-green-700",
+// Simple, consistent color assignment based on genre hash
+const getGenreColor = (genre: string): string => {
+    const colors = [
+        "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
+        "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+        "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+        "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
+        "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+        "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-300",
+        "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300",
+        "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300",
+        "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-300",
+        "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300",
+        "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+        "bg-lime-100 text-lime-700 dark:bg-lime-900/30 dark:text-lime-300",
+        "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
+        "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300",
+        "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+        "bg-slate-100 text-slate-700 dark:bg-slate-900/30 dark:text-slate-300",
+    ];
+
+    // Create a simple hash from genre string to ensure consistency
+    let hash = 0;
+    for (let i = 0; i < genre.length; i++) {
+        hash = ((hash << 5) - hash + genre.charCodeAt(i)) & 0xffffffff;
+    }
+    
+    // Use absolute value to ensure positive index
+    const colorIndex = Math.abs(hash) % colors.length;
+    return colors[colorIndex];
 };
 
 const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
@@ -146,13 +165,13 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
     } : null;
 
     return (
-        <main className="w-[90vw] mx-auto my-12 p-6 pt-0 relative z-0 font-sans flex flex-col min-h-[540px]"
+        <main className="w-[90vw] mx-auto  p-6 pt-0 relative z-0 font-sans flex flex-col min-h-[540px]"
             style={{
                 fontFamily: `'Inter', 'Segoe UI', Arial, sans-serif`,
             }}
         >
             {/* Header Section */}
-            <div className="flex flex-col gap-8 p-4 pt-8 bg-transparent relative z-10 mb-8">
+            <div className="flex flex-col gap-8 pt-8 bg-transparent relative z-10">
                 <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-8 shadow-xl border border-[#31c266]/20 dark:border-gray-700 backdrop-blur-xl">
                     <PlaylistInfo
                         name={playlist.name}
@@ -180,7 +199,7 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
             </div>
             
             <div className="relative z-10">
-                <PlaylistTrackTable tracks={formattedTracks} genreColors={genreColors} />
+                <PlaylistTrackTable tracks={formattedTracks} getGenreColor={getGenreColor} />
             </div>
         </main>
     );

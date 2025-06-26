@@ -74,7 +74,7 @@ export const deletePlaylistFromSpotify = action({
         const { playlistId } = args;
 
         // Validate the playlist exists
-        const playlist: Doc<"playlists"> = await ctx.runQuery(api.playlistActions.getPlaylist, { playlistId });
+        const playlist: Doc<"playlists"> | null = await ctx.runQuery(api.playlistActions.getPlaylist, { playlistId });
         if (!playlist) {    
             throw new Error("Playlist not found");
         }
