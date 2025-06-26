@@ -85,7 +85,7 @@ function App() {
         >
           <Route path="/" element={<Home user={user!} loading={loading} isSpotifyConnected={isSpotifyConnected} />} />
           <Route path="/playlists" element={<Playlists user={user!} />} />
-          <Route path="/playlist/:playlistId" element={<Playlist user={user!} />} />
+          <Route path="/playlist/:playlistId" element={<Playlist user={user!} isSpotifyConnected={isSpotifyConnected} />} />
         </Route>
       </Routes>
     </>

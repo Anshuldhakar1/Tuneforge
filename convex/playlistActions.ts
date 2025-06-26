@@ -22,44 +22,64 @@ export const getAllPlaylists = query({
 
 export const getPlaylist = query({
     args: {
-        playlistId: v.id("playlists"),
+        playlistId: v.string(),
     },
-    handler: async (ctx, args : { playlistId: Id<"playlists"> }) => {
-        const playlist = await ctx.db
-            .query("playlists").filter((q) => q.eq(q.field("_id"), args.playlistId)).first();
-        
-        if (!playlist) {
-            throw new Error("Playlist not found");
-        }
+    handler: async (ctx, args : { playlistId: string }) => {
+        try {
+            // Validate that the string looks like a valid Convex ID
+            if (!args.playlistId || args.playlistId.trim() === "") {
+                return null;
+            }
 
-        return playlist;
+            // Try to use the string as an ID - if it's invalid, the query will fail gracefully
+            const playlist = await ctx.db
+                .query("playlists").filter((q) => q.eq(q.field("_id"), args.playlistId as Id<"playlists">)).first();
+            
+            // Return null if playlist not found instead of throwing error
+            return playlist || null;
+        } catch (error) {
+            // Handle any database errors gracefully (including invalid ID format)
+            console.error("Error fetching playlist:", error);
+            return null;
+        }
     }
 });
 
 export const getPlaylistTracksFromId = query({
     args: {
-        playlistId: v.id("playlists")
+        playlistId: v.string()
     },
-    handler: async (ctx, args) => {
-        const playlistTracks = await ctx.db
-            .query("playlistTracks")
-            .withIndex("byPlaylistId", (q) => q.eq("playlistId", args.playlistId))
-            .collect();
-        
-        if (playlistTracks.length === 0) {
+    handler: async (ctx, args: { playlistId: string }) => {
+        try {
+            // Validate that the string looks like a valid Convex ID
+            if (!args.playlistId || args.playlistId.trim() === "") {
+                return [];
+            }
+
+            const playlistTracks = await ctx.db
+                .query("playlistTracks")
+                .withIndex("byPlaylistId", (q) => q.eq("playlistId", args.playlistId as Id<"playlists">))
+                .collect();
+            
+            if (playlistTracks.length === 0) {
+                return [];
+            }
+
+            const trackIds = playlistTracks.map(pt => pt.trackId);
+            
+            const tracks = await ctx.db
+                .query("tracks")
+                .filter((q) => 
+                    q.or(...trackIds.map(id => q.eq(q.field("_id"), id)))
+                )
+                .collect();
+            
+            return tracks;
+        } catch (error) {
+            // Handle any database errors gracefully (including invalid ID format)
+            console.error("Error fetching playlist tracks:", error);
             return [];
         }
-
-        const trackIds = playlistTracks.map(pt => pt.trackId);
-        
-        const tracks = await ctx.db
-            .query("tracks")
-            .filter((q) => 
-                q.or(...trackIds.map(id => q.eq(q.field("_id"), id)))
-            )
-            .collect();
-        
-        return tracks;
     },
 });
 

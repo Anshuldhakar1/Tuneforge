@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { action } from "./_generated/server";
-import type { Doc, Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
 import { api } from "./_generated/api";
 
 export const createPlaylist = action({
@@ -33,11 +33,14 @@ export const createPlaylist = action({
             throw new Error("Failed to retrieve Spotify user ID");
         }
 
-        console.log("Access Token:", accessToken);
-        console.log("Spotify User ID:", spotifyUserId);
+        // console.log("Access Token:", accessToken);
+        // console.log("Spotify User ID:", spotifyUserId);
 
-        const playlist: Doc<"playlists"> = await _ctx.runQuery(api.playlistActions.getPlaylist, { playlistId: playlistId });
-        console.log("Playlist:", playlist);
+        const playlist = await _ctx.runQuery(api.playlistActions.getPlaylist, { playlistId: playlistId });
+        if (!playlist) {
+            throw new Error("Playlist not found");
+        }
+        // console.log("Playlist:", playlist);
 
         const playlistTracks = await _ctx.runQuery(api.playlistActions.getPlaylistTracksFromId, { playlistId: playlistId });
         if (playlistTracks.length === 0) {
@@ -49,7 +52,7 @@ export const createPlaylist = action({
             throw new Error("No valid Spotify track URIs found in the playlist");
         }
 
-        console.log("Track URIs:", trackUris);
+        // console.log("Track URIs:", trackUris);
 
         // create a new spotify playlist
         const { playlistId: newPlaylistId, playlistUrl } = await createAndPopulateSpotifyPlaylist({
@@ -61,8 +64,8 @@ export const createPlaylist = action({
             isPublic: false, // or false based on your requirement
         });
 
-        console.log("New Playlist ID:", newPlaylistId);
-        console.log("New Playlist URL:", playlistUrl);
+        // console.log("New Playlist ID:", newPlaylistId);
+        // console.log("New Playlist URL:", playlistUrl);
 
         await _ctx.runMutation(api.playlistActions.addPlaylistSpotifyLink, {
             playlistId: playlistId,

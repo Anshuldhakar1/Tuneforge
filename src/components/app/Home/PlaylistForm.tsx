@@ -1,4 +1,4 @@
-import { Play, Zap, Music, Wand2, Sparkles } from "lucide-react"
+import { Play, Zap, Music, Sparkles } from "lucide-react"
 import { AnimatePresence } from "framer-motion"
 
 interface PlaylistFormProps {

@@ -93,7 +93,7 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                 >
                     <Link
                         to="/playlists"
-                        className="flex items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#31c266]/10 dark:hover:bg-[#31c266]/20 transition-all duration-200 gap-3 no-underline block"
+                        className="items-center w-full px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-[#31c266]/10 dark:hover:bg-[#31c266]/20 transition-all duration-200 gap-3 no-underline block"
                         onClick={handlePlaylistsClick}
                         style={{ pointerEvents: 'auto' }}
                     >

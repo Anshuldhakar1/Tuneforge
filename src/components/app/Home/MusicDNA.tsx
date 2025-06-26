@@ -1,4 +1,4 @@
-import { Activity, Headphones, Clock, Heart, Sparkles, TrendingUp, Music } from "lucide-react"
+import { Activity, Headphones, Clock, Heart, TrendingUp, Music } from "lucide-react"
 
 interface MusicDNAProps {
     isSpotifyConnected: boolean;
@@ -19,18 +19,18 @@ const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
     };
 
     // Function to fetch real data from backend (placeholder)
-    const fetchSpotifyStats = async () => {
-        // TODO: Implement actual API calls to:
-        // - GET /v1/me/top/artists
-        // - GET /v1/me/top/tracks  
-        // - GET /v1/me/tracks
-        // - GET /v1/me/playlists
-        // - GET /v1/me/following?type=artist
-        // - GET /v1/me/player/recently-played
-        // - GET /v1/me/player/currently-playing
-        console.log("Fetching Spotify statistics...");
-        return mockStats;
-    };
+    // const fetchSpotifyStats = async () => {
+    //     // TODO: Implement actual API calls to:
+    //     // - GET /v1/me/top/artists
+    //     // - GET /v1/me/top/tracks  
+    //     // - GET /v1/me/tracks
+    //     // - GET /v1/me/playlists
+    //     // - GET /v1/me/following?type=artist
+    //     // - GET /v1/me/player/recently-played
+    //     // - GET /v1/me/player/currently-playing
+    //     console.log("Fetching Spotify statistics...");
+    //     return mockStats;
+    // };
 
     return (
         <div className="relative overflow-hidden bg-blue-50/60 dark:bg-gray-800/95 rounded-xl border border-blue-200/30 dark:border-gray-700 p-4">

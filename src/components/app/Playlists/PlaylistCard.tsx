@@ -21,7 +21,7 @@ export function PlaylistCard({
   playlist,
   liked,
   onLike,
-  onDelete,
+  // onDelete,
   gradient
 }: PlaylistCardProps) {
   const formatDate = (timestamp: number) => {

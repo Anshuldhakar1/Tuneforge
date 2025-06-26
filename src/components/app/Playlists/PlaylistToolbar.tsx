@@ -8,8 +8,8 @@ type PlaylistsToolbarProps = {
 export function PlaylistsToolbar({
   searchQuery,
   setSearchQuery,
-  showFavoritesOnly,
-  setShowFavoritesOnly
+  // showFavoritesOnly,
+  // setShowFavoritesOnly
 }: PlaylistsToolbarProps) {
   return (
     <div className="flex gap-1.5 mb-6 items-center">
