@@ -16,11 +16,13 @@ import type {
 import type * as auth from "../auth.js";
 import type * as gemini from "../gemini.js";
 import type * as http from "../http.js";
+import type * as migrations from "../migrations.js";
 import type * as playlistActions from "../playlistActions.js";
 import type * as playlistCreation from "../playlistCreation.js";
 import type * as spotify from "../spotify.js";
 import type * as spotifyAuth from "../spotifyAuth.js";
 import type * as spotifyCreate from "../spotifyCreate.js";
+import type * as tracks from "../tracks.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -34,11 +36,13 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   gemini: typeof gemini;
   http: typeof http;
+  migrations: typeof migrations;
   playlistActions: typeof playlistActions;
   playlistCreation: typeof playlistCreation;
   spotify: typeof spotify;
   spotifyAuth: typeof spotifyAuth;
   spotifyCreate: typeof spotifyCreate;
+  tracks: typeof tracks;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

@@ -23,6 +23,7 @@ export default defineSchema({
     userId: v.id("users"),
     name: v.string(),
     description: v.optional(v.string()),
+    moods: v.optional(v.array(v.string())),
     createdAt: v.number(),
     updatedAt: v.number(),
     spotifyPlaylistId: v.optional(v.string()), // For Spotify integration
@@ -40,11 +41,13 @@ export default defineSchema({
   tracks: defineTable({
     title: v.string(),
     artist: v.string(),
-    album: v.optional(v.string()),
-    genre: v.array(v.string()),
+    album: v.string(),
+    genre: v.optional(v.array(v.string())),
     durationMs: v.optional(v.number()),
     spotifyTrackId: v.optional(v.string()),
     coverUrl: v.optional(v.string()),
+    releaseDate: v.optional(v.string()),
+    popularity: v.optional(v.number()),
   }).index("bySpotifyTrackId", ["spotifyTrackId"]),
 
   playlistLikes: defineTable({

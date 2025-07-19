@@ -2,7 +2,6 @@ import { Edit2, Calendar, Clock, Check, X, Headphones } from "lucide-react";
 
 type PlaylistInfoProps = {
   name: string;
-  generatedFrom: string;
   desc: string;
   editing: boolean;
   descDraft: string;
@@ -12,11 +11,11 @@ type PlaylistInfoProps = {
   createdAt: string | number;
   duration: string;
   tracksCount: number;
+  moods?: string[];
 };
 
 export function PlaylistInfo({
   name,
-  generatedFrom,
   desc,
   editing,
   descDraft,
@@ -26,6 +25,7 @@ export function PlaylistInfo({
   createdAt,
   duration,
   tracksCount,
+  moods,
 }: PlaylistInfoProps) {
 
   // Helper function to format date safely
@@ -95,12 +95,21 @@ export function PlaylistInfo({
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-3 leading-tight bg-gradient-to-r from-gray-900 via-[#31c266] to-emerald-600 dark:from-white dark:via-[#31c266] dark:to-emerald-400 bg-clip-text text-transparent">
           {name}
         </h1>
-        <div className="mb-3">
-          <span className="text-gray-500 text-base font-bold">Generated from:</span>
-          <span className="italic text-gray-600 dark:text-gray-300 ml-2 font-medium">
-            "{generatedFrom}"
-          </span>
-        </div>
+        
+        {/* Moods Tags - Show if they exist */}
+        {moods && moods.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-3">
+            {moods.map((mood, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 text-xs font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-full border border-gray-300 dark:border-gray-600 shadow-sm"
+              >
+                {mood}
+              </span>
+            ))}
+          </div>
+        )}
+
         <div className="mb-3 flex items-start gap-3">
           <span className="text-gray-700 dark:text-gray-200 font-bold mt-1">
             Description:

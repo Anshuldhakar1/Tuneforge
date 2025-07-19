@@ -175,7 +175,6 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
                 <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-8 shadow-xl border border-[#31c266]/20 dark:border-gray-700 backdrop-blur-xl">
                     <PlaylistInfo
                         name={playlist.name}
-                        generatedFrom="AI Generated Playlist" // Default since field doesn't exist
                         desc={desc}
                         editing={editing}
                         descDraft={descDraft}
@@ -185,6 +184,7 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
                         createdAt={playlist.createdAt}
                         duration={`${formattedTracks.length} tracks`}
                         tracksCount={formattedTracks.length}
+                        moods={playlist.moods}
                     />
                     <PlaylistActions 
                         liked={liked} 

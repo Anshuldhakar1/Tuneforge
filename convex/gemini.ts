@@ -17,22 +17,16 @@ Only include real songs and artists that exist on Spotify
   "playlist": {
     "name": "A creative, relevant playlist name",
     "description": "A brief summary of the playlist's vibe, purpose, or story",
-    "genre": ["Genre1", "Genre2", ...],
     "mood": ["Mood1", "Mood2", ...],
     "tracks": [
       {
         "title": "Song Title",
         "artist": "Artist Name",
         "album": "Album Name",
-        "durationMs": "Duration in milliseconds",
-        "genre": "Song Genre1,Song Genre2, ...",
-        "coverUrl": "Optional: URL to the album cover image if not there return empty",
+        "genre": ["Genre1", "Genre2"]
       }
       // ...at least 10 tracks
     ],
-    "total_tracks": Number of tracks,
-    "estimated_duration": "Approximate total duration (e.g., '1h 15m')",
-    "theme": "Optional: overarching theme or concept"
   }
 }
 
@@ -40,6 +34,7 @@ Instructions:
 - Only return valid JSON in the above format, with no extra text or explanation.
 - Fill all fields with real data.
 - Ensure 'tracks' is an array, each with all fields filled.
+- Include 1-3 relevant genres for each track (e.g., ["pop", "rock"], ["hip hop", "trap"], ["electronic", "house"]).
 - Use double quotes for all keys and string values.
 - If a field is unknown, leave it as an empty string or empty array as appropriate.
 `;
@@ -50,19 +45,13 @@ export type Track = {
     artist: string;
     album: string;
     genre: string[];
-    durationMs: string; // Duration in milliseconds
-    coverUrl: string;
 };
   
 export type Playlist = {
     name: string;
     description: string;
-    genre: string[];
     mood: string[];
     tracks: Track[];
-    total_tracks: number;
-    estimated_duration: string;
-    theme: string;
 };
   
 export type PlaylistResponse = {
@@ -94,13 +83,21 @@ async function retryWithBackoff<T>(
     throw new Error("Model is overloaded. Please try again later.");
 };
   
-  export const aiGenerate = action({
+  export type PlaylistCreationResult = {
+  playlistId: Id<"playlists">;
+  tracksFound: number;
+  tracksRequested: number;
+  errors: string[];
+  playlist: Playlist;
+};
+
+export const aiGenerate = action({
     args: {
       token: v.string(),
       prompt: v.string(),
       playlistName: v.string(),
     },
-    handler: async (_ctx, args) => {
+    handler: async (_ctx, args): Promise<PlaylistCreationResult> => {
       const genprompt =
         generationFormatInstruction +
         "\n\n" +
@@ -116,19 +113,60 @@ async function retryWithBackoff<T>(
           });
         });
   
+        console.log("Raw AI response:", response.text);
+        
         const parsedResponse = parsePlaylist(response.text ? response.text : "");
   
         if (!parsedResponse) {
           throw new Error("Failed to parse playlist response");
         }
-  
-        const actualTracksFound: any = await _ctx.runAction(api.playlistCreation.createPlayList, {
-          token: args.token,
-          playlistName: args.playlistName,
-          response: parsedResponse,
+
+        // Get user ID from session token
+        const userId = await _ctx.runQuery(api.auth.getUserBySessionToken, { token: args.token });
+        if (!userId) {
+          throw new Error("User not authenticated");
+        }
+
+        // Prepare track search data for Spotify (use only first artist for better search results)
+        const trackSearchData = parsedResponse.playlist.tracks.map(track => ({
+          trackName: track.title,
+          artistName: track.artist.split(',')[0].trim(), // Take only first artist
+          aiGenres: track.genre, // Pass AI-generated genres
+        }));
+
+        // Fetch tracks from Spotify and create them in DB
+        const spotifyResult = await _ctx.runAction(api.spotify.getOptimizedTracksFromSpotify, {
+          trackSearchData: trackSearchData,
+          userId: userId,
         });
 
-        return actualTracksFound;
+        // Create the playlist in our database
+        const playlistId = await _ctx.runMutation(api.playlistCreation.createPlaylistWithTracks, {
+          token: args.token,
+          playlistName: args.playlistName,
+          description: parsedResponse.playlist.description,
+          mood: parsedResponse.playlist.mood,
+          spotifyTracks: spotifyResult.tracks,
+        });
+
+        if (trackSearchData.length > spotifyResult.tracks.length) {
+          // print which tracks were not found
+          const notFoundTracks = trackSearchData.filter(
+            (track) =>
+              !spotifyResult.tracks.some(
+                (t) => t.searchData?.trackName === track.trackName && t.searchData?.artistName === track.artistName
+              )
+          );
+          console.log("Tracks not found:", notFoundTracks);
+        }
+
+        return {
+          playlistId,
+          tracksFound: spotifyResult.tracks.length,
+          tracksRequested: trackSearchData.length,
+          errors: spotifyResult.errors,
+          playlist: parsedResponse.playlist,
+        };
 
       } catch (error: any) {
         console.error("Google GenAI API error:", error);
@@ -158,22 +196,43 @@ export const parsePlaylist = (aiOutput: string): PlaylistResponse | null => {
         ? [val]
         : [];
   
-    // Helper to normalize a track
-    const normalizeTrack = (t: any): Track => ({
-        title: typeof t?.title === "string" ? t.title : "",
-        artist: typeof t?.artist === "string" ? t.artist : "",
-        album: typeof t?.album === "string" ? t.album : "",
-        genre: typeof t?.genre === "string" ? t.genre : "",  
-        durationMs: typeof t?.durationMs === "string" ? t.durationMs : "",
-        coverUrl: typeof t?.coverUrl === "string" ? t.coverUrl : "",
-    });
+    // Helper to normalize a track - only requires title, artist, album
+    const normalizeTrack = (t: any): Track => {
+        const cleanString = (str: string): string => {
+            return str
+                .trim()
+                .replace(/^['"`]+|['"`]+$/g, '') // Remove leading/trailing quotes
+                .replace(/\\'/g, "'") // Unescape single quotes
+                .replace(/\\"/g, '"') // Unescape double quotes
+                .replace(/\\\\/g, '\\') // Unescape backslashes
+                .trim();
+        };
+
+        return {
+          title: typeof t?.title === "string" ? cleanString(t.title) : "",
+          artist: typeof t?.artist === "string" ? cleanString(t.artist) : "",
+          album: typeof t?.album === "string" ? cleanString(t.album) : "",
+          genre: Array.isArray(t?.genre) ? t.genre.filter((g: any) => typeof g === "string").map((g: string) => cleanString(g)) : [],
+        };
+    };
   
-    // 1. Extract JSON substring
+    // 1. Clean and extract JSON substring
     let jsonStr = aiOutput;
-    const firstBrace = aiOutput.indexOf("{");
-    const lastBrace = aiOutput.lastIndexOf("}");
+    
+    // Remove any markdown code blocks
+    jsonStr = jsonStr.replace(/```json\s*|\s*```/g, '');
+    
+    // Fix common JSON formatting issues before parsing
+    jsonStr = jsonStr
+      .replace(/\n\s*\n/g, '\n') // Remove empty lines
+      .replace(/\n\s*/g, ' ') // Replace newlines with spaces
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim();
+    
+    const firstBrace = jsonStr.indexOf("{");
+    const lastBrace = jsonStr.lastIndexOf("}");
     if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-      jsonStr = aiOutput.slice(firstBrace, lastBrace + 1);
+      jsonStr = jsonStr.slice(firstBrace, lastBrace + 1);
     }
   
     // 2. Try parsing
@@ -181,46 +240,57 @@ export const parsePlaylist = (aiOutput: string): PlaylistResponse | null => {
     try {
       data = JSON.parse(jsonStr);
     } catch (e) {
-      // Try to fix common JSON issues (single quotes, trailing commas)
+      console.log("Initial JSON parse failed, attempting to fix formatting...");
+      // Try to fix common JSON issues
       jsonStr = jsonStr
         .replace(/'([^']*)'/g, '"$1"') // single quotes to double quotes
         .replace(/`([^`]*)`/g, '"$1"') // backticks to double quotes
-        .replace(/,\s*([}\]])/g, "$1"); // remove trailing commas
+        .replace(/,\s*([}\]])/g, "$1") // remove trailing commas
+        .replace(/([{,]\s*)(\w+):/g, '$1"$2":') // Add quotes to unquoted keys
+        .replace(/:\s*([^",\[\]{}]+)(?=\s*[,}])/g, ':"$1"'); // Add quotes to unquoted string values
+      
       try {
         data = JSON.parse(jsonStr);
       } catch (e2) {
+        console.error("Failed to parse JSON after cleanup:", e2);
+        console.log("Problematic JSON string:", jsonStr.substring(0, 500) + "...");
         return null;
       }
     }
   
     // 3. Normalize structure
     let playlist = data.playlist || data;
-    if (!playlist) return null;
+    if (!playlist) {
+      console.error("No playlist data found in parsed response");
+      return null;
+    }
   
-    // 4. Normalize fields
+    // 4. Validate and normalize tracks - only require title, artist, album
+    const normalizedTracks = [];
+    if (Array.isArray(playlist.tracks)) {
+      for (const track of playlist.tracks) {
+        const normalized = normalizeTrack(track);
+        // Only add tracks that have all required fields including genre
+        if (normalized.title && normalized.artist && normalized.album) {
+          normalizedTracks.push(normalized);
+        } else {
+          console.warn("Skipping invalid track:", track);
+        }
+      }
+    }
+  
+    // 5. Create final normalized response - simplified structure
     const normalized: PlaylistResponse = {
       playlist: {
-        name: typeof playlist.name === "string" ? playlist.name : "",
+        name: typeof playlist.name === "string" ? playlist.name.trim().replace(/^['"`]+|['"`]+$/g, '') : "",
         description:
-          typeof playlist.description === "string" ? playlist.description : "",
-        genre: ensureArray(playlist.genre),
+          typeof playlist.description === "string" ? playlist.description.trim().replace(/^['"`]+|['"`]+$/g, '') : "",
         mood: ensureArray(playlist.mood),
-        tracks: Array.isArray(playlist.tracks)
-          ? playlist.tracks.map(normalizeTrack)
-          : [],
-        total_tracks:
-          typeof playlist.total_tracks === "number"
-            ? playlist.total_tracks
-            : Array.isArray(playlist.tracks)
-            ? playlist.tracks.length
-            : 0,
-        estimated_duration:
-          typeof playlist.estimated_duration === "string"
-            ? playlist.estimated_duration
-            : "",
-        theme: typeof playlist.theme === "string" ? playlist.theme : "",
+        tracks: normalizedTracks,
       },
     };
+  
+    console.log(`Successfully parsed playlist with ${normalizedTracks.length} valid tracks`);
   
     return normalized;
 }
