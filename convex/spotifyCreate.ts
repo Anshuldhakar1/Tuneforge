@@ -11,7 +11,7 @@ export const createPlaylist = action({
     handler: async (_ctx, args: { token: string; playlistId: Id<"playlists"> }): Promise<any> => {
         const { token, playlistId } = args;
         if (!token) {
-            console.log("❌ Token is missing");
+            // console.log("❌ Token is missing");
             throw new Error("Token is required");
         }
 
@@ -19,7 +19,7 @@ export const createPlaylist = action({
         let accessToken = spotifyTokens?.accessToken;
         let spotifyUserId = spotifyTokens?.spotifyUserId;
         if (!spotifyTokens) {
-            console.log("❌ No Spotify tokens found for the user, attempting to refresh tokens");
+            // console.log("❌ No Spotify tokens found for the user, attempting to refresh tokens");
 
             const r = await _ctx.runAction(api.spotifyAuth.refreshSpotifyToken);
             accessToken = r.accessToken;
@@ -33,14 +33,14 @@ export const createPlaylist = action({
             throw new Error("Failed to retrieve Spotify user ID");
         }
 
-        console.log("Access Token:", accessToken);
-        console.log("Spotify User ID:", spotifyUserId);
+        // console.log("Access Token:", accessToken);
+        // console.log("Spotify User ID:", spotifyUserId);
 
         const playlist = await _ctx.runQuery(api.playlistActions.getPlaylist, { playlistId: playlistId });
         if (!playlist) {
             throw new Error("Playlist not found");
         }
-        console.log("Playlist:", playlist);
+        // console.log("Playlist:", playlist);
 
         const playlistTracks = await _ctx.runQuery(api.playlistActions.getPlaylistTracksFromId, { playlistId: playlistId });
         if (playlistTracks.length === 0) {
@@ -52,7 +52,7 @@ export const createPlaylist = action({
             throw new Error("No valid Spotify track URIs found in the playlist");
         }
 
-        console.log("Track URIs:", trackUris);
+        // console.log("Track URIs:", trackUris);
 
         // create a new spotify playlist
         const { playlistId: newPlaylistId, playlistUrl } = await createAndPopulateSpotifyPlaylist({
@@ -64,8 +64,8 @@ export const createPlaylist = action({
             isPublic: false, // or false based on your requirement
         });
 
-        console.log("New Playlist ID:", newPlaylistId);
-        console.log("New Playlist URL:", playlistUrl);
+        // console.log("New Playlist ID:", newPlaylistId);
+        // console.log("New Playlist URL:", playlistUrl);
 
         await _ctx.runMutation(api.playlistActions.addPlaylistSpotifyLink, {
             playlistId: playlistId,

@@ -30,8 +30,6 @@ export function PlaylistInfo({
   firstFourTrackCovers = [],
 }: PlaylistInfoProps) {
 
-
-
   // console.log(firstFourTrackCovers);
 
   // Helper function to format date safely
