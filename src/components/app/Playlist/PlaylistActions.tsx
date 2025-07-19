@@ -17,7 +17,6 @@ type PlaylistActionsProps = {
       title: string;
       artist: string;
       album: string;
-      genre: string;
       duration: string;
     }>;
   };
@@ -59,42 +58,43 @@ export function PlaylistActions({
   };
 
   return (
-    <div className="flex flex-wrap gap-3 mt-6">
-      <button
-        className={clsx(
-          "w-12 h-12 rounded-full border-2 flex items-center justify-center backdrop-blur-sm transition-all duration-300 shadow-lg",
-          liked 
-            ? "bg-red-50/80 dark:bg-red-900/20 border-red-200 dark:border-red-700 ring-2 ring-red-400/30" 
-            : "bg-white/80 dark:bg-gray-900/80 border-gray-200 dark:border-gray-700 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e]"
-        )}
-        onClick={() => setLiked((l) => !l)}
-        aria-label="Like playlist"
-      >
-        <Heart
-          size={20}
-          fill={liked ? "#ef4444" : "none"}
-          color={liked ? "#ef4444" : "#31c266"}
-          className="transition-all duration-200"
-        />
-      </button>
-      
-      <button
-        className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e] transition-all duration-300 shadow-lg backdrop-blur-sm"
-        aria-label="Share playlist"
-      >
-        <Share2 size={18} className="text-[#31c266]" />
-      </button>
-      
-      <button
-        className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e] transition-all duration-300 shadow-lg backdrop-blur-sm"
-        onClick={handleDownloadJSON}
-        aria-label="Download playlist as JSON"
-      >
-        <Download size={18} className="text-[#31c266]" />
-      </button>
-      
+    <div>
+      <div className="flex flex-wrap gap-3 mt-6 absolute top-0 right-[2rem] z-20">
+        <button
+          className={clsx(
+            "w-12 h-12 rounded-full border-2 flex items-center justify-center backdrop-blur-sm transition-all duration-300 shadow-lg",
+            liked
+              ? "bg-red-50/80 dark:bg-red-900/20 border-red-200 dark:border-red-700 ring-2 ring-red-400/30"
+              : "bg-white/80 dark:bg-gray-900/80 border-gray-200 dark:border-gray-700 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e]"
+          )}
+          onClick={() => setLiked((l) => !l)}
+          aria-label="Like playlist"
+        >
+          <Heart
+            size={20}
+            fill={liked ? "#ef4444" : "none"}
+            color={liked ? "#ef4444" : "#31c266"}
+            className="transition-all duration-200"
+          />
+        </button>
+
+        <button
+          className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e] transition-all duration-300 shadow-lg backdrop-blur-sm"
+          aria-label="Share playlist"
+        >
+          <Share2 size={18} className="text-[#31c266]" />
+        </button>
+
+        <button
+          className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e] transition-all duration-300 shadow-lg backdrop-blur-sm"
+          onClick={handleDownloadJSON}
+          aria-label="Download playlist as JSON"
+        >
+          <Download size={18} className="text-[#31c266]" />
+        </button>
+      </div>
       {isSpotifyConnected && (
-        <div className="relative group">
+        <div className="group absolute right-[2rem] bottom-[2rem] z-20">
           <button
             className={clsx(
               "flex items-center gap-3 px-6 py-3 rounded-2xl transition-all duration-300 text-sm font-bold backdrop-blur-sm border-2",
@@ -143,5 +143,6 @@ export function PlaylistActions({
         </div>
       )}
     </div>
+    
   );
 }

@@ -1,5 +1,4 @@
-import { Clock, Trash2, Music } from "lucide-react";
-import clsx from "clsx";
+import { Clock, Music, TrendingUp } from "lucide-react";
 
 type PlaylistTrackTableProps = {
   tracks: Array<{
@@ -7,88 +6,145 @@ type PlaylistTrackTableProps = {
     title: string;
     artist: string;
     album: string;
-    genre: string;
+    genre: string[];
     duration: string;
+    coverUrl?: string;
+    popularity?: number;
+    releaseDate?: string;
   }>;
   getGenreColor: (genre: string) => string;
 };
 
 export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTableProps) {
   return (
-    <div className="mt-8 bg-white/90 dark:bg-gray-900/90 rounded-2xl shadow-xl border border-[#31c266]/20 dark:border-gray-700 overflow-hidden backdrop-blur-xl">
-      <table className="min-w-full text-left">
-        <thead>
-          <tr className="bg-gradient-to-r from-[#eafaf2]/80 to-emerald-50/60 dark:from-[#1e2e25]/80 dark:to-green-900/20">
-            <th className="py-4 px-4 font-bold text-[#31c266] text-sm">#</th>
-            <th className="py-4 px-4 font-bold text-[#31c266] text-sm">
-              Track Details
-            </th>
-            <th className="py-4 px-4 font-bold text-[#31c266] text-sm">
-              Album
-            </th>
-            <th className="py-4 px-4 font-bold text-[#31c266] text-sm">
-              Genre
-            </th>
-            <th className="py-4 px-4 font-bold text-[#31c266] text-sm">
-              <Clock size={12} className="inline" />
-            </th>
-            <th className="py-4 px-4 font-bold text-[#31c266] text-sm">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {tracks.map((track, idx) => (
-            <tr
-              key={track.id}
-              className={clsx(
-                "border-t border-gray-100/50 dark:border-gray-800/50 hover:bg-[#31c266]/5 dark:hover:bg-[#31c266]/10 transition-all duration-200",
-                idx % 2 === 0 ? "bg-white/60 dark:bg-gray-900/60" : "bg-gray-50/40 dark:bg-gray-800/40"
-              )}
-            >
-              <td className="py-3 px-4 text-gray-500 text-base font-medium">{idx + 1}</td>
-              <td className="py-3 px-4 flex items-center gap-3">
-                <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-[#eafaf2] to-emerald-100 dark:from-[#223c2e] dark:to-green-900/30 shadow-sm">
-                  <Music size={16} className="text-[#31c266]" />
-                </span>
-                <div>
-                  <div className="font-bold text-gray-900 dark:text-white text-base">
-                    {track.title}
-                  </div>
-                  <div className="text-sm text-gray-500 font-medium">{track.artist}</div>
-                </div>
-              </td>
-              <td className="py-3 px-4 text-gray-700 dark:text-gray-300 text-base font-medium">
-                {track.album}
-              </td>
-              <td className="py-3 px-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <span
-                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide ${getGenreColor(track.genre)}`}
-                    title={`Genre: ${track.genre}`}
-                  >
-                    {track.genre}
+    <div className="mt-8">
+      {/* Tracks Grid */}
+      <div className="">
+        {tracks.map((track, idx) => (
+          <div
+            key={track.id}
+            className="relative overflow-hidden rounded-sm bg-white dark:bg-gray-900 shadow-lg border border-gray-200/50 dark:border-gray-700/50"
+          >
+            {/* Background Pattern */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#31c266]/5 via-[#31c266]/2 to-[#31c266]/5"></div>
+            
+            {/* Content */}
+            <div className="relative flex items-center px-6 py-4">
+              {/* Left Section: Number + Cover + Track Info */}
+              <div className="flex items-center gap-6 flex-1 min-w-0">
+                {/* Track Number */}
+                <div className="flex-shrink-0 w-8 text-center">
+                  <span className="text-2xl font-bold text-gray-400 dark:text-gray-500">
+                    {idx + 1}
                   </span>
                 </div>
-              </td>
-              <td className="py-3 px-4 text-gray-700 dark:text-gray-300 text-base font-medium">
-                {track.duration}
-              </td>
-              <td className="py-3 px-4 flex gap-2">
-                <button
-                  className="p-2 rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 transition-all duration-200 group shadow-sm"
-                  aria-label="Delete track"
-                >
-                  <Trash2
-                    size={16}
-                    className="text-gray-500 group-hover:text-red-600 transition-all duration-200"
-                  />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+                {/* Cover Image */}
+                <div className="flex-shrink-0">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden shadow-lg bg-gradient-to-br from-[#eafaf2] to-emerald-100 dark:from-[#223c2e] dark:to-green-900/30 flex items-center justify-center">
+                    {track.coverUrl ? (
+                      <img
+                        src={track.coverUrl}
+                        alt={`${track.title} cover`}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <Music size={24} className="text-[#31c266] opacity-60" />
+                    )}
+                  </div>
+                </div>
+
+                {/* Track Details */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate mb-1">
+                    {track.title}
+                  </h3>
+                  <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                    <span className="font-medium truncate">{track.artist}</span>
+                    <span className="text-gray-400">•</span>
+                    <span className="truncate">{track.album}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Section: Genre + Stats + Duration */}
+              <div className="flex items-center gap-8 flex-shrink-0">
+                {/* Genre Badge */}
+                <div className="hidden lg:block">
+                  <div className="flex flex-wrap gap-1 max-w-[200px]">
+                    {track.genre.slice(0, 2).map((singleGenre, genreIdx) => (
+                      <span
+                        key={genreIdx}
+                        className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${getGenreColor(singleGenre)}`}
+                      >
+                        {singleGenre}
+                      </span>
+                    ))}
+                    {track.genre.length > 2 && (
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                        +{track.genre.length - 2}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Popularity Score */}
+                {track.popularity !== undefined && (
+                  <div className="hidden md:flex items-center gap-2 bg-gray-100/80 dark:bg-gray-800/80 px-4 py-2 rounded-full">
+                    <TrendingUp size={16} className="text-[#31c266]" />
+                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
+                      {track.popularity}
+                    </span>
+                  </div>
+                )}
+
+                {/* Duration */}
+                <div className="flex items-center gap-2 bg-[#31c266]/10 dark:bg-[#31c266]/20 px-4 py-2 rounded-full">
+                  <Clock size={16} className="text-[#31c266]" />
+                  <span className="text-sm font-bold text-[#31c266] dark:text-emerald-400">
+                    {track.duration}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Bottom Section */}
+            <div className="lg:hidden px-6 pb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-1">
+                  {track.genre.slice(0, 2).map((singleGenre, genreIdx) => (
+                    <span
+                      key={genreIdx}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold ${getGenreColor(singleGenre)}`}
+                    >
+                      {singleGenre}
+                    </span>
+                  ))}
+                  {track.genre.length > 2 && (
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                      +{track.genre.length - 2}
+                    </span>
+                  )}
+                </div>
+                
+                {track.popularity !== undefined && (
+                  <div className="flex items-center gap-2 bg-gray-100/80 dark:bg-gray-800/80 px-3 py-1.5 rounded-full md:hidden">
+                    <TrendingUp size={14} className="text-[#31c266]" />
+                    <span className="text-xs font-bold text-gray-700 dark:text-gray-300">
+                      {track.popularity}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#31c266] to-emerald-500"></div>
+            <div className="absolute bottom-0 right-0 w-20 h-0.5 bg-gradient-to-l from-[#31c266]/30 to-transparent"></div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

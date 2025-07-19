@@ -12,6 +12,7 @@ type PlaylistInfoProps = {
   duration: string;
   tracksCount: number;
   moods?: string[];
+  firstFourTrackCovers?: Array<{ coverUrl: string }>;
 };
 
 export function PlaylistInfo({
@@ -26,7 +27,12 @@ export function PlaylistInfo({
   duration,
   tracksCount,
   moods,
+  firstFourTrackCovers = [],
 }: PlaylistInfoProps) {
+
+
+
+  // console.log(firstFourTrackCovers);
 
   // Helper function to format date safely
   const formatDate = (dateInput: string | number) => {
@@ -77,18 +83,28 @@ export function PlaylistInfo({
   return (
     <div className="flex gap-8 items-center">
       {/* Large Headphone Icon */}
-      <div className="flex-shrink-0">
-        <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#31c266] to-[#1e8c4c] flex items-center justify-center shadow-2xl border-2 border-white/20 backdrop-blur-sm relative overflow-hidden">
-          {/* Animated background glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 animate-pulse" />
-          
-          {/* Floating music notes */}
-          <div className="absolute top-2 right-2 text-white/20 text-sm animate-bounce" style={{ animationDelay: '0.3s' }}>♪</div>
-          <div className="absolute bottom-3 left-3 text-white/15 text-xs animate-bounce" style={{ animationDelay: '0.8s' }}>♫</div>
-          
-          <Headphones size={48} className="text-white opacity-90 drop-shadow-lg relative z-10" />
+      {firstFourTrackCovers.length == 0 ? (
+        <div className="flex-shrink-0">
+          <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-[#31c266] to-[#1e8c4c] flex items-center justify-center shadow-2xl border-2 border-white/20 backdrop-blur-sm relative overflow-hidden">
+            {/* Animated background glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 animate-pulse" />
+
+            {/* Floating music notes */}
+            <div className="absolute top-2 right-2 text-white/20 text-sm animate-bounce" style={{ animationDelay: '0.3s' }}>♪</div>
+            <div className="absolute bottom-3 left-3 text-white/15 text-xs animate-bounce" style={{ animationDelay: '0.8s' }}>♫</div>
+
+            <Headphones size={48} className="text-white opacity-90 drop-shadow-lg relative z-10" />
+          </div>
+        </div>  
+      ) :
+        <div className="grid grid-cols-2 grid-rows-2 shadow-lg shadow-slate-600 w-[15rem] rounded-2xl overflow-hidden">
+          {firstFourTrackCovers.map((cover, index) => (
+            <div key={index} className="relative w-full  h-32 overflow-hidden">
+              <img src={cover.coverUrl} alt={`Track Cover ${index + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+            </div>
+          ))}
         </div>
-      </div>
+      }
 
       {/* Content */}
       <div className="flex-1">

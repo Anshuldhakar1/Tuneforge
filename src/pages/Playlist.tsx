@@ -150,9 +150,35 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
         title: track.title,
         artist: track.artist,
         album: track.album || "Unknown Album",
-        genre: Array.isArray(track.genre) ? track.genre[0] || "Unknown" : track.genre || "Unknown",
+        genre: Array.isArray(track.genre) ? track.genre : [track.genre || "Unknown"],
         duration: track.durationMs ? `${Math.floor(track.durationMs / 60000)}:${Math.floor((track.durationMs % 60000) / 1000).toString().padStart(2, '0')}` : "0:00",
+        durationMs: track.durationMs || 0,
+        coverUrl: track.coverUrl,
+        popularity: track.popularity,
+        releaseDate: track.releaseDate,
     })) || [];
+
+    console.log(formattedTracks);
+
+    const firstFourTrackCovers = formattedTracks.slice(0, 4).map(track => ({
+        coverUrl: track.coverUrl || "",
+    }));
+
+    // Calculate total duration from all tracks
+    const totalDurationMs = formattedTracks.reduce((total, track) => total + track.durationMs, 0);
+    const totalHours = Math.floor(totalDurationMs / 3600000);
+    const totalMinutes = Math.floor((totalDurationMs % 3600000) / 60000);
+    const totalSeconds = Math.floor((totalDurationMs % 60000) / 1000);
+    
+    const formatTotalDuration = () => {
+        if (totalHours > 0) {
+            return `${totalHours}h ${totalMinutes}m`;
+        } else if (totalMinutes > 0) {
+            return `${totalMinutes}m ${totalSeconds}s`;
+        } else {
+            return `${totalSeconds}s`;
+        }
+    };
 
     const playlistData = playlist ? {
         id: playlist._id,
@@ -161,7 +187,13 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
         generatedFrom: "AI Generated Playlist", // Default since field doesn't exist in schema
         createdAt: new Date(playlist.createdAt || Date.now()).toLocaleDateString(),
         duration: `${formattedTracks.length} tracks`, // Calculate from tracks
-        tracks: formattedTracks
+        tracks: formattedTracks.map(track => ({
+            id: track.id,
+            title: track.title,
+            artist: track.artist,
+            album: track.album,
+            duration: track.duration
+        }))
     } : null;
 
     return (
@@ -171,8 +203,8 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
             }}
         >
             {/* Header Section */}
-            <div className="flex flex-col gap-8 pt-8 bg-transparent relative z-10">
-                <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-8 shadow-xl border border-[#31c266]/20 dark:border-gray-700 backdrop-blur-xl">
+            <div className="flex flex-col gap-8 pt-2 bg-transparent relative z-10">
+                <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-10 shadow-xl border border-[#31c266]/20 dark:border-gray-700 backdrop-blur-xl relative">
                     <PlaylistInfo
                         name={playlist.name}
                         desc={desc}
@@ -182,9 +214,10 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
                         setDescDraft={setDescDraft}
                         setDesc={setDesc}
                         createdAt={playlist.createdAt}
-                        duration={`${formattedTracks.length} tracks`}
+                        duration={formatTotalDuration()}
                         tracksCount={formattedTracks.length}
                         moods={playlist.moods}
+                        firstFourTrackCovers={firstFourTrackCovers}
                     />
                     <PlaylistActions 
                         liked={liked} 
