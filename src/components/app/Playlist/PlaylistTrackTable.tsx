@@ -1,4 +1,5 @@
 import { Clock, Music, TrendingUp } from "lucide-react";
+import { useState } from "react";
 
 type PlaylistTrackTableProps = {
   tracks: Array<{
@@ -16,6 +17,24 @@ type PlaylistTrackTableProps = {
 };
 
 export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTableProps) {
+  const [hoveredPopularity, setHoveredPopularity] = useState<string | null>(null);
+  const [hoverTimer, setHoverTimer] = useState<NodeJS.Timeout | null>(null);
+
+  const handlePopularityMouseEnter = (trackId: string) => {
+    const timer = setTimeout(() => {
+      setHoveredPopularity(trackId);
+    }, 800); // 800ms delay before showing tooltip
+    setHoverTimer(timer);
+  };
+
+  const handlePopularityMouseLeave = () => {
+    if (hoverTimer) {
+      clearTimeout(hoverTimer);
+      setHoverTimer(null);
+    }
+    setHoveredPopularity(null);
+  };
+
   return (
     <div className="mt-8">
       {/* Tracks Grid */}
@@ -25,7 +44,7 @@ export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTable
             key={track.id}
             className="relative overflow-hidden rounded-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm border border-gray-200/40 dark:border-gray-700/40"
           >
-            {/* Subtle Background */}
+            {/* Simple Subtle Background */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#31c266]/2 via-transparent to-[#31c266]/2"></div>
             
             {/* Content */}
@@ -71,22 +90,26 @@ export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTable
               {/* Right Section: Genre + Stats + Duration */}
               <div className="flex items-center gap-4 flex-shrink-0 self-center">
                 {/* Fixed Width Genre Display */}
-                  <div className="h-8 flex items-center">
-                    <div className="flex items-center gap-1.5 min-w-max">
-                      {track.genre.map((genre, genreIdx) => (
-                        <span
-                          key={genreIdx}
-                          className={`px-2 py-1 rounded-md text-xs font-medium shadow-sm whitespace-nowrap flex-shrink-0 ${getGenreColor(genre)}`}
-                        >
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
+                <div className="h-8 flex items-center">
+                  <div className="flex items-center gap-1.5 min-w-max">
+                    {track.genre.map((genre, genreIdx) => (
+                      <span
+                        key={genreIdx}
+                        className={`px-2 py-1 rounded-md text-xs font-medium shadow-sm whitespace-nowrap flex-shrink-0 ${getGenreColor(genre)}`}
+                      >
+                        {genre}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Compact Popularity Score */}
                 {track.popularity !== undefined && (
-                  <div className="hidden md:flex items-center justify-center">
+                  <div 
+                    className="hidden md:flex items-center justify-center relative"
+                    onMouseEnter={() => handlePopularityMouseEnter(track.id)}
+                    onMouseLeave={handlePopularityMouseLeave}
+                  >
                     <div className="relative w-10 h-10">
                       <svg className="w-10 h-10 transform -rotate-90" viewBox="0 0 40 40">
                         <circle
@@ -118,6 +141,14 @@ export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTable
                         </span>
                       </div>
                     </div>
+                    
+                    {/* Delayed Tooltip */}
+                    {hoveredPopularity === track.id && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm text-gray-900 dark:text-white text-xs rounded-lg shadow-lg border border-gray-200/40 dark:border-gray-700/40 z-50 whitespace-nowrap animate-in fade-in-0 duration-300">
+                        Score taken by spotify and based on spotify trends
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-white/95 dark:border-t-gray-900/95"></div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -148,18 +179,55 @@ export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTable
                 </div>
                 
                 {track.popularity !== undefined && (
-                  <div className="flex items-center gap-2 bg-gray-100/60 dark:bg-gray-800/60 px-2 py-1 rounded-md md:hidden flex-shrink-0">
+                  <div 
+                    className="flex items-center gap-2 bg-gray-100/60 dark:bg-gray-800/60 px-2 py-1 rounded-md md:hidden flex-shrink-0 relative"
+                    onMouseEnter={() => handlePopularityMouseEnter(`${track.id}-mobile`)}
+                    onMouseLeave={handlePopularityMouseLeave}
+                  >
                     <TrendingUp size={12} className="text-[#31c266]" />
                     <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                       {track.popularity}
                     </span>
+                    
+                    {/* Mobile Delayed Tooltip */}
+                    {hoveredPopularity === `${track.id}-mobile` && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm text-gray-900 dark:text-white text-xs rounded-lg shadow-lg border border-gray-200/40 dark:border-gray-700/40 z-50 whitespace-nowrap animate-in fade-in-0 duration-300">
+                        Score taken by spotify and based on spotify trends
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-white/95 dark:border-t-gray-900/95"></div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Minimal Left Border */}
-            <div className="absolute top-0 left-0 w-0.5 h-full bg-[#31c266]/40"></div>
+            {/* Ultra Majestic Left Border Accent */}
+            <div className="absolute top-0 left-0 w-3 h-full">
+              {/* Primary glowing core */}
+              <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#31c266] via-emerald-400 to-emerald-500 opacity-95 shadow-2xl rounded-r-sm"></div>
+              
+              {/* Luminous shimmer */}
+              <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-white/40 via-emerald-200/20 to-white/30 animate-pulse rounded-r-sm"></div>
+              
+              {/* Extended glow aura */}
+              <div className="absolute top-0 left-2 w-1 h-full bg-gradient-to-b from-[#31c266]/50 via-emerald-400/40 to-emerald-500/50 blur-md"></div>
+              
+              {/* Radiant edge highlight */}
+              <div className="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-white/60 via-emerald-100/40 to-white/50 rounded-r-full"></div>
+              
+              {/* Celestial accent dots */}
+              <div className="absolute top-3 left-1 w-1.5 h-1.5 rounded-full bg-white shadow-2xl animate-pulse" style={{ animationDelay: '0s' }}></div>
+              <div className="absolute top-1/3 left-0.5 w-1 h-1 rounded-full bg-emerald-100 shadow-xl animate-pulse" style={{ animationDelay: '0.7s' }}></div>
+              <div className="absolute top-2/3 left-1 w-1.5 h-1.5 rounded-full bg-emerald-200 shadow-2xl animate-pulse" style={{ animationDelay: '1.4s' }}></div>
+              <div className="absolute bottom-3 left-0.5 w-1 h-1 rounded-full bg-white/80 shadow-xl animate-pulse" style={{ animationDelay: '2.1s' }}></div>
+              
+              {/* Diamond accent */}
+              <div className="absolute top-1/2 left-1 w-1 h-1 bg-white transform rotate-45 shadow-lg animate-pulse" style={{ animationDelay: '2.8s' }}></div>
+              
+              {/* Flowing light streaks */}
+              <div className="absolute top-0 left-0 w-2 h-2 bg-gradient-to-br from-white/50 to-transparent rounded-full animate-ping" style={{ animationDelay: '0s', animationDuration: '3s' }}></div>
+              <div className="absolute bottom-0 left-0 w-2 h-2 bg-gradient-to-tr from-emerald-300/50 to-transparent rounded-full animate-ping" style={{ animationDelay: '1.5s', animationDuration: '3s' }}></div>
+            </div>
           </div>
         ))}
       </div>

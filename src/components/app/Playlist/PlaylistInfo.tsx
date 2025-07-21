@@ -79,7 +79,21 @@ export function PlaylistInfo({
   };
 
   return (
-    <div className="flex gap-8 items-center">
+    <div className="flex gap-8 items-center relative">
+      {/* Cool Impactful Accent Design */}
+      <div className="absolute top-[10%] h-[80%] w-[150%] left-[-3rem] z-[-1]">
+        
+        {/* Bold corner accents */}
+        <div className="absolute top-[15%] left-[15%] w-4 h-4 bg-[#31c266]/70 transform rotate-45" />
+        <div className="absolute bottom-[15%] right-[25%] w-3 h-3 bg-emerald-400/60 transform rotate-45" />
+        
+        {/* Sleek connecting lines */}
+        <div className="absolute top-[30%] left-[30%] w-8 h-0.5 bg-[#31c266]/50 transform -rotate-45" />
+        <div className="absolute bottom-[30%] right-[40%] w-6 h-0.5 bg-emerald-500/50 transform -rotate-45" />
+      </div>
+
+    
+    
       {/* Large Headphone Icon */}
       {firstFourTrackCovers.length == 0 ? (
         <div className="flex-shrink-0">
@@ -106,21 +120,30 @@ export function PlaylistInfo({
 
       {/* Content */}
       <div className="flex-1">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-3 leading-tight bg-gradient-to-r from-gray-900 via-[#31c266] to-emerald-600 dark:from-white dark:via-[#31c266] dark:to-emerald-400 bg-clip-text text-transparent">
-          {name}
+        {/* Subtle Gradient Title */}
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 leading-tight">
+          <span className="bg-gradient-to-r from-gray-700 via-[#31c266] to-emerald-600 dark:from-gray-300 dark:via-emerald-400 dark:to-emerald-500 bg-clip-text text-transparent">
+            {name}
+          </span>
         </h1>
         
-        {/* Moods Tags - Show if they exist */}
+        {/* Creative Mood Visualization */}
         {moods && moods.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {moods.map((mood, index) => (
-              <span
-                key={index}
-                className="px-3 py-1 text-xs font-medium bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-full border border-gray-300 dark:border-gray-600 shadow-sm"
-              >
-                {mood}
-              </span>
-            ))}
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
+              {moods.map((mood, index) => (
+                <span
+                  key={index}
+                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors cursor-default"
+                  style={{
+                    borderLeft: `3px solid hsl(${(index * 360) / moods.length + 120}, 60%, 65%)`,
+                    paddingLeft: '6px'
+                  }}
+                >
+                  {mood}
+                </span>
+              ))}
+            </div>
           </div>
         )}
 

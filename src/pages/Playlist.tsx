@@ -204,7 +204,7 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
         >
             {/* Header Section */}
             <div className="flex flex-col gap-8 pt-2 bg-transparent relative z-10">
-                <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-10 shadow-xl border border-[#31c266]/20 dark:border-gray-700 backdrop-blur-xl relative">
+                <div className="bg-white/90 dark:bg-gray-800/90 rounded-2xl p-10 shadow-xl border border-[#31c266]/20 dark:border-gray-700 backdrop-blur-xl relative overflow-hidden">
                     <PlaylistInfo
                         name={playlist.name}
                         desc={desc}
