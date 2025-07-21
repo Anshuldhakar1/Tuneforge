@@ -132,7 +132,7 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
       console.log("AI generation result: ", result);
       toast
         .success("Playlist generated successfully!", {
-          description: `Generated ${result.length} tracks. Check your playlists for the new tracks.`,
+          description: "Your playlist has been created. Check your playlists for the new tracks.",
         });
       
       // navigate to your playlists when generation is complete

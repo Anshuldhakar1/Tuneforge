@@ -52,7 +52,7 @@ const HeaderSection = () => (
             </svg>
             
             {/* Enhanced pulsing glow effect */}
-            <motion.div
+            {/* <motion.div
                 className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-[#31c266] rounded-full shadow-lg"
                 style={{ boxShadow: '0 0 20px rgba(49,194,102,0.6)' }}
                 animate={{ 
@@ -65,7 +65,7 @@ const HeaderSection = () => (
                     repeatDelay: 5.6,
                     ease: "easeOut"
                 }}
-            />
+            /> */}
         </div>
 
         <h1 className="text-5xl font-bold text-gray-900 mb-3 leading-tight relative z-10">
