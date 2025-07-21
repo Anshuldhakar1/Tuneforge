@@ -127,13 +127,13 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
               <span
                   className={`
                       text-sm transition-all duration-100 ease-in-out
-                      ${isHovered ? "opacity-100 max-w-[120px] mx-2 pb-1" : "opacity-0 max-w-0 mx-0"}
-                      ${!isSpotifyConnected ? "text-green-500" : "text-red-500"}
+                      opacity-100 max-w-[120px] mx-2 pb-1"
+                      ${isSpotifyConnected ? (isHovered ? "text-red-500" : "text-green-500") : (!isHovered ? "text-red-500" : "text-green-500") }
                       inline-block overflow-hidden font-[515]
                   `}
                   style={{ transitionProperty: "max-width, opacity, margin" }}
               >
-                  {isSpotifyConnected ? "Disconnect" : "Connect"}
+                  {!isSpotifyConnected ? (isHovered ? "Connect" : "Disconnected") :(isHovered ? "Disconnect" : "Connected")}
               </span>
           </div>
       </button>
