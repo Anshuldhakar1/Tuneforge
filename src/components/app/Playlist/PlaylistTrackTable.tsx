@@ -42,7 +42,7 @@ export function PlaylistTrackTable({ tracks, getGenreColor }: PlaylistTrackTable
         {tracks.map((track, idx) => (
           <div
             key={track.id}
-            className="relative overflow-hidden rounded-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm border border-gray-200/40 dark:border-gray-700/40"
+            className="relative overflow-visible rounded-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm border border-gray-200/40 dark:border-gray-700/40"
           >
             {/* Simple Subtle Background */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#31c266]/2 via-transparent to-[#31c266]/2"></div>
