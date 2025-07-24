@@ -1,6 +1,6 @@
 <div align="center" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; margin: 40px 0;">
   
-# ![Tuneforger](./public/tuneforger-logo.svg) Tuneforger
+# ![Tuneforger](./public/tuneforger-logo.svg)  <span style="position: relative; top: -0.75rem">Tuneforger</span>
 
   <p><em>AI-Powered Spotify Playlist Generator</em></p>
 </div>
