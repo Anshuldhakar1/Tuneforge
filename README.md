@@ -1,10 +1,11 @@
-# Tuneforger
+<div align="center" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; margin: 40px 0;">
+  
+# ![Tuneforger](./public/tuneforger-logo.svg) Tuneforger
 
-<div align="center">
-  ![Tuneforger](./public/tuneforger-logo.svg)
+  <p><em>AI-Powered Spotify Playlist Generator</em></p>
 </div>
 
-An AI-powered playlist generator that creates personalized Spotify playlists using artificial intelligence. Tuneforger analyzes your music preferences and generates curated playlists tailored to your taste, mood, or specific requirements.
+## An AI-powered playlist generator that creates personalized Spotify playlists using artificial intelligence. Tuneforger analyzes your music preferences and generates curated playlists tailored to your taste, mood, or specific requirements.
 
 ## Tech Stack
 
