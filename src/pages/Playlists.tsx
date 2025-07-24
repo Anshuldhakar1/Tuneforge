@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Music, Heart } from "lucide-react";
-import { PlaylistsToolbar } from "../components/app/Playlists/PlaylistToolbar";
 import { PlaylistCard } from "../components/app/Playlists/PlaylistCard";
 import { PlaylistDeleteModal } from "../components/app/Playlists/PlaylistDeleteModal";
 import { useQuery } from "convex/react";
@@ -21,50 +20,194 @@ const gradients = [
   {
     name: "sunset",
     bg: "bg-gradient-to-br from-orange-300 via-red-400 to-pink-500",
-    accent: "bg-orange-500",
+    accent: "orange-500",
+    primary: "orange-400",
+    secondary: "pink-500",
     border: "border-orange-200"
   },
   {
     name: "ocean",
     bg: "bg-gradient-to-br from-sky-300 via-blue-400 to-indigo-500",
-    accent: "bg-blue-500",
+    accent: "blue-500",
+    primary: "blue-400",
+    secondary: "indigo-500",
     border: "border-blue-200"
   },
   {
     name: "forest",
     bg: "bg-gradient-to-br from-emerald-300 via-green-400 to-teal-500",
-    accent: "bg-green-500",
+    accent: "green-500",
+    primary: "green-400",
+    secondary: "teal-500",
     border: "border-green-200"
   },
   {
     name: "lavender",
     bg: "bg-gradient-to-br from-violet-300 via-purple-400 to-fuchsia-500",
-    accent: "bg-purple-500",
+    accent: "purple-500",
+    primary: "purple-400",
+    secondary: "fuchsia-500",
     border: "border-purple-200"
   },
   {
     name: "golden",
     bg: "bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-400",
-    accent: "bg-yellow-500",
+    accent: "yellow-500",
+    primary: "yellow-400",
+    secondary: "orange-400",
     border: "border-yellow-200"
   },
   {
     name: "rose",
     bg: "bg-gradient-to-br from-pink-300 via-rose-400 to-red-400",
-    accent: "bg-pink-500",
+    accent: "pink-500",
+    primary: "rose-400",
+    secondary: "red-400",
     border: "border-pink-200"
   },
   {
     name: "cosmic",
     bg: "bg-gradient-to-br from-indigo-400 via-purple-500 to-violet-600",
-    accent: "bg-indigo-500",
+    accent: "indigo-500",
+    primary: "indigo-400",
+    secondary: "violet-600",
     border: "border-indigo-200"
   },
   {
     name: "mint",
     bg: "bg-gradient-to-br from-teal-300 via-cyan-400 to-blue-400",
-    accent: "bg-teal-500",
+    accent: "teal-500",
+    primary: "teal-400",
+    secondary: "blue-400",
     border: "border-teal-200"
+  },
+  {
+    name: "autumn",
+    bg: "bg-gradient-to-br from-red-300 via-orange-400 to-yellow-500",
+    accent: "red-500",
+    primary: "orange-400",
+    secondary: "yellow-500",
+    border: "border-red-200"
+  },
+  {
+    name: "midnight",
+    bg: "bg-gradient-to-br from-slate-400 via-gray-500 to-zinc-600",
+    accent: "slate-600",
+    primary: "slate-500",
+    secondary: "zinc-600",
+    border: "border-slate-300"
+  },
+  {
+    name: "tropical",
+    bg: "bg-gradient-to-br from-lime-300 via-green-400 to-emerald-500",
+    accent: "lime-500",
+    primary: "green-400",
+    secondary: "emerald-500",
+    border: "border-lime-200"
+  },
+  {
+    name: "coral",
+    bg: "bg-gradient-to-br from-pink-300 via-orange-400 to-red-400",
+    accent: "pink-400",
+    primary: "orange-400",
+    secondary: "red-400",
+    border: "border-pink-200"
+  },
+  {
+    name: "arctic",
+    bg: "bg-gradient-to-br from-cyan-200 via-blue-300 to-indigo-400",
+    accent: "cyan-500",
+    primary: "blue-300",
+    secondary: "indigo-400",
+    border: "border-cyan-200"
+  },
+  {
+    name: "berry",
+    bg: "bg-gradient-to-br from-purple-300 via-pink-400 to-red-500",
+    accent: "purple-600",
+    primary: "pink-400",
+    secondary: "red-500",
+    border: "border-purple-200"
+  },
+  {
+    name: "emerald",
+    bg: "bg-gradient-to-br from-green-200 via-emerald-300 to-teal-400",
+    accent: "emerald-500",
+    primary: "emerald-300",
+    secondary: "teal-400",
+    border: "border-emerald-200"
+  },
+  {
+    name: "neon",
+    bg: "bg-gradient-to-br from-violet-400 via-fuchsia-500 to-pink-600",
+    accent: "fuchsia-500",
+    primary: "fuchsia-500",
+    secondary: "pink-600",
+    border: "border-fuchsia-200"
+  },
+  {
+    name: "copper",
+    bg: "bg-gradient-to-br from-amber-400 via-orange-500 to-red-600",
+    accent: "amber-600",
+    primary: "orange-500",
+    secondary: "red-600",
+    border: "border-amber-300"
+  },
+  {
+    name: "sapphire",
+    bg: "bg-gradient-to-br from-blue-300 via-indigo-400 to-purple-500",
+    accent: "blue-600",
+    primary: "indigo-400",
+    secondary: "purple-500",
+    border: "border-blue-200"
+  },
+  {
+    name: "pearl",
+    bg: "bg-gradient-to-br from-gray-200 via-slate-300 to-zinc-400",
+    accent: "gray-500",
+    primary: "slate-300",
+    secondary: "zinc-400",
+    border: "border-gray-300"
+  },
+  {
+    name: "fire",
+    bg: "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600",
+    accent: "orange-600",
+    primary: "orange-500",
+    secondary: "red-600",
+    border: "border-orange-200"
+  },
+  {
+    name: "galaxy",
+    bg: "bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-700",
+    accent: "indigo-600",
+    primary: "purple-600",
+    secondary: "pink-700",
+    border: "border-indigo-300"
+  },
+  {
+    name: "jade",
+    bg: "bg-gradient-to-br from-green-300 via-teal-400 to-cyan-500",
+    accent: "teal-600",
+    primary: "teal-400",
+    secondary: "cyan-500",
+    border: "border-teal-200"
+  },
+  {
+    name: "storm",
+    bg: "bg-gradient-to-br from-gray-400 via-slate-500 to-blue-600",
+    accent: "slate-700",
+    primary: "slate-500",
+    secondary: "blue-600",
+    border: "border-slate-300"
+  },
+  {
+    name: "cherry",
+    bg: "bg-gradient-to-br from-red-400 via-pink-500 to-rose-600",
+    accent: "red-600",
+    primary: "pink-500",
+    secondary: "rose-600",
+    border: "border-red-300"
   }
 ];
 
@@ -89,7 +232,16 @@ function Playlists({ user }: PlaylistsProps) {
   const fetchedPlaylists = useQuery(api.playlistActions.getAllPlaylists, { userId: user.userId });
   const allPlaylists = fetchedPlaylists || [];
 
-  // Filter playlists based on search query and favorites, then sort by newest first
+  const userLikedPlaylists = useQuery(api.playlistLikes.getUserLiked, { userId: user.userId });
+
+  useEffect(() => {
+    if (userLikedPlaylists) {
+      // console.log("User liked playlists:", userLikedPlaylists);
+      const likedPlaylistIds = userLikedPlaylists.map(like => like.playlistId);
+      setLikedPlaylists(likedPlaylistIds);
+    }
+  }, [userLikedPlaylists]);
+
   const playlists = allPlaylists
     .filter((playlist: { name: string; description: string; _id: string; }) => {
       const matchesSearch = searchQuery === "" || 
@@ -101,7 +253,6 @@ function Playlists({ user }: PlaylistsProps) {
       return matchesSearch && matchesFavorites;
     })
     .sort((a: Doc<"playlists">, b: Doc<"playlists">) => {
-      // Sort by creation time, newest first
       return b._creationTime - a._creationTime;
     });
 
@@ -116,7 +267,7 @@ function Playlists({ user }: PlaylistsProps) {
   return (
     <main
       className="
-        w-[90vw] mx-auto my-12 p-6 
+        w-[90vw] mx-auto my-12 p-6 mt-3
         rounded-3xl shadow-2xl
         border border-[#31c266]/30 dark:border-gray-700
         bg-white/95 dark:bg-gray-900/95
@@ -125,7 +276,6 @@ function Playlists({ user }: PlaylistsProps) {
         font-sans
         flex flex-col
         min-h-[540px]
-        transform hover:-translate-y-0.5 transition-all duration-300
       "
       style={{
         fontFamily: `'Inter', 'Segoe UI', Arial, sans-serif`,

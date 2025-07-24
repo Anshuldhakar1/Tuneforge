@@ -19,6 +19,7 @@ import type * as http from "../http.js";
 import type * as migrations from "../migrations.js";
 import type * as playlistActions from "../playlistActions.js";
 import type * as playlistCreation from "../playlistCreation.js";
+import type * as playlistLikes from "../playlistLikes.js";
 import type * as spotify from "../spotify.js";
 import type * as spotifyAuth from "../spotifyAuth.js";
 import type * as spotifyCreate from "../spotifyCreate.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   migrations: typeof migrations;
   playlistActions: typeof playlistActions;
   playlistCreation: typeof playlistCreation;
+  playlistLikes: typeof playlistLikes;
   spotify: typeof spotify;
   spotifyAuth: typeof spotifyAuth;
   spotifyCreate: typeof spotifyCreate;

@@ -6,6 +6,8 @@ type GradientConfig = {
   name: string;
   bg: string;
   accent: string;
+  primary: string;
+  secondary: string;
   border: string;
 };
 
@@ -33,8 +35,57 @@ export function PlaylistCard({
     });
   };
 
+  // Helper function to get color values for inline styles
+  const getColorStyle = (colorName: string) => {
+    const colorMap: { [key: string]: string } = {
+      'orange-400': '#fb923c',
+      'orange-500': '#f97316',
+      'blue-400': '#60a5fa',
+      'blue-500': '#3b82f6',
+      'green-400': '#4ade80',
+      'green-500': '#22c55e',
+      'purple-400': '#c084fc',
+      'purple-500': '#a855f7',
+      'yellow-400': '#facc15',
+      'yellow-500': '#eab308',
+      'rose-400': '#fb7185',
+      'pink-500': '#ec4899',
+      'indigo-400': '#818cf8',
+      'indigo-500': '#6366f1',
+      'teal-400': '#2dd4bf',
+      'teal-500': '#14b8a6',
+      'red-400': '#f87171',
+      'red-500': '#ef4444',
+      'red-600': '#dc2626',
+      'slate-500': '#64748b',
+      'slate-600': '#475569',
+      'slate-700': '#334155',
+      'lime-500': '#84cc16',
+      'pink-400': '#f472b6',
+      'pink-600': '#db2777',
+      'pink-700': '#be185d',
+      'cyan-500': '#06b6d4',
+      'blue-300': '#93c5fd',
+      'blue-600': '#2563eb',
+      'emerald-300': '#6ee7b7',
+      'emerald-500': '#10b981',
+      'fuchsia-500': '#d946ef',
+      'amber-600': '#d97706',
+      'purple-600': '#9333ea',
+      'gray-500': '#6b7280',
+      'slate-300': '#cbd5e1',
+      'orange-600': '#ea580c',
+      'teal-600': '#0d9488',
+      'indigo-600': '#4f46e5',
+      'violet-600': '#7c3aed',
+      'zinc-600': '#52525b',
+      'rose-600': '#e11d48',
+    };
+    return colorMap[colorName] || '#6b7280';
+  };
+
   return (
-    <div className="group relative w-full max-w-sm mx-auto">
+    <div className="group relative w-full max-w-sm mx-auto" data-playlist-id={playlist._id}>
       {/* Main Card Container */}
       <div className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border ${gradient.border} dark:border-gray-700 transform hover:-translate-y-1`}>
         
@@ -105,7 +156,7 @@ export function PlaylistCard({
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate relative">
                 {playlist.name}
                 {/* Subtle underline accent */}
-                <div className={`absolute -bottom-1 left-0 h-0.5 w-1/3 ${gradient.accent} opacity-30 group-hover:opacity-60 transition-opacity duration-300`} />
+                <div className={`absolute -bottom-1 left-0 h-0.5 w-1/3 bg-${gradient.accent} opacity-30 group-hover:opacity-60 transition-opacity duration-300`} />
               </h3>
               {playlist.description && (
                 <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">
@@ -118,9 +169,21 @@ export function PlaylistCard({
             <Link
               to={`/playlist/${playlist._id}`}
               aria-label="View playlist"
-              className={`p-3 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-200 shadow-lg text-gray-700 hover:text-gray-900 z-10 border-2 ${gradient.accent.replace('bg-', 'border-')} hover:shadow-xl relative overflow-hidden`}
+              className="p-3 rounded-full backdrop-blur-sm hover:scale-110 transition-all duration-200 shadow-lg hover:text-gray-900 z-10 hover:shadow-xl relative overflow-hidden border-2"
+              style={{
+                backgroundColor: `${getColorStyle(gradient.primary)}30`,
+                borderColor: `${getColorStyle(gradient.primary)}CC`,
+                color: getColorStyle(gradient.secondary),
+              }}
             >
               <Play size={20} fill="currentColor" />
+              
+              {/* Decorative dots */}
+              <div className="absolute top-1 right-3 w-1 h-1 rounded-full opacity-60" style={{ backgroundColor: getColorStyle(gradient.secondary) }} />
+              <div className="absolute top-4 left-2 w-0.5 h-0.5 rounded-full opacity-40" style={{ backgroundColor: getColorStyle(gradient.secondary) }} />
+              <div className="absolute bottom-1 left-2 w-0.5 h-0.5 rounded-full opacity-50" style={{ backgroundColor: getColorStyle(gradient.secondary) }} />
+              <div className="absolute bottom-2 right-2 w-1 h-1 rounded-full opacity-30" style={{ backgroundColor: getColorStyle(gradient.secondary) }} />
+              
               {/* Subtle shine effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 opacity-0 hover:opacity-100 transition-opacity duration-300" />
             </Link>
@@ -129,7 +192,7 @@ export function PlaylistCard({
           {/* Metadata */}
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-1">
-              <div className={`w-1.5 h-1.5 rounded-full ${gradient.accent} opacity-50`} />
+              <div className={`w-1.5 h-1.5 rounded-full bg-${gradient.accent} opacity-50`} />
               Created {formatDate(playlist.createdAt)}
             </span>
             <div className="flex items-center gap-2">
@@ -147,10 +210,10 @@ export function PlaylistCard({
         <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/5 to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         
         {/* Animated Bottom Border Accent */}
-        <div className={`absolute bottom-0 left-0 right-0 h-1 ${gradient.accent} opacity-60 group-hover:opacity-100 transition-all duration-300 transform origin-left scale-x-0 group-hover:scale-x-100`} />
+        <div className={`absolute bottom-0 left-0 right-0 h-1 bg-${gradient.accent} opacity-60 group-hover:opacity-100 transition-all duration-300 transform origin-left scale-x-0 group-hover:scale-x-100`} />
         
         {/* Side accent line */}
-        <div className={`absolute left-0 top-0 bottom-0 w-1 ${gradient.accent} opacity-40 group-hover:opacity-80 transition-opacity duration-300`} />
+        <div className={`absolute left-0 top-0 bottom-0 w-1 bg-${gradient.accent} opacity-40 group-hover:opacity-80 transition-opacity duration-300`} />
       </div>
     </div>
   );
