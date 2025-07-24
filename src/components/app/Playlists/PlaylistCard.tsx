@@ -137,15 +137,31 @@ export function PlaylistCard({
                 e.stopPropagation();
                 onLike(playlist._id);
               }}
-              className="p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 transition-all duration-200 shadow-sm hover:shadow-md"
+              className={`relative p-2 rounded-full backdrop-blur-md transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden group/like ${
+                liked 
+                  ? 'bg-gradient-to-r from-red-500/90 to-pink-500/90 hover:from-red-600/90 hover:to-pink-600/90 border border-red-400/50' 
+                  : 'bg-white/80 hover:bg-white/90 border border-white/30 hover:border-white/50'
+              } hover:scale-110 active:scale-95`}
               aria-label={liked ? "Unlike playlist" : "Like playlist"}
             >
+              {/* Decorative background elements */}
+              {/* <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50" />
+              <div className="absolute top-1 right-1 w-2 h-2 bg-white/30 rounded-full animate-pulse" />
+              <div className="absolute bottom-1 left-1 w-1 h-1 bg-white/40 rounded-full" /> */}
+              
+              {/* Animated ripple effect on click */}
+              <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-active/like:scale-150 group-active/like:opacity-0 transition-all duration-300" />
+              
               <Heart
-                size={16}
-                fill={liked ? "#ef4444" : "none"}
-                stroke={liked ? "#ef4444" : "#666"}
-                className="transition-colors duration-200"
+                size={18}
+                fill={liked ? "#ffffff" : "none"}
+                stroke={liked ? "#ffffff" : "#374151"}
+                className="relative z-10 transition-all duration-300 group-active/like:scale-125 group-hover/like:drop-shadow-sm"
+                strokeWidth={liked ? 0 : 2}
               />
+              
+              {/* Shine effect on hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 opacity-0 group-hover/like:opacity-100 group-hover/like:translate-x-full transition-all duration-500" />
             </button>
 
             {/* Spotify Link (if available) */}

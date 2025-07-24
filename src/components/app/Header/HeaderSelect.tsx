@@ -75,8 +75,6 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                             <span className="relative z-10">{getInitials(user.username)}</span>
                         </span>
-                        {/* Status indicator */}
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-gray-900 shadow-sm"></div>
                     </div>
                     
                     <div className="flex-1 min-w-0">
