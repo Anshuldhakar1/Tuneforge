@@ -159,10 +159,10 @@ export const aiGenerate = action({
           const notFoundTracks = trackSearchData.filter(
             (track) =>
               !spotifyResult.tracks.some(
-                (t) => t.searchData?.trackName === track.trackName && t.searchData?.artistName === track.artistName
+                (t:any) => t.searchData?.trackName === track.trackName && t.searchData?.artistName === track.artistName
               )
           );
-          // console.log("Tracks not found:", notFoundTracks);
+          console.log("Tracks not found:", notFoundTracks);
         }
 
         return {

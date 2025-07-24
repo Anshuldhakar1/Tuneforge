@@ -104,14 +104,6 @@ export function PlaylistActions({
             className="transition-all duration-200"
           />
         </button>
-
-        <button
-          className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e] transition-all duration-300 shadow-lg backdrop-blur-sm"
-          aria-label="Share playlist"
-        >
-          <Share2 size={18} className="text-[#31c266]" />
-        </button>
-
         <button
           className="w-12 h-12 rounded-full border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e] transition-all duration-300 shadow-lg backdrop-blur-sm"
           onClick={handleDownloadJSON}

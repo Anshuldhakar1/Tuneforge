@@ -62,7 +62,7 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
             style={{ zIndex: 1000 }}
         >
             <button
-                className={`group flex items-center gap-3 px-4 py-2.5 ${open ? 'rounded-t-xl border-b-0' : 'rounded-xl'} bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-[2px]  dark:border-gray-700/40 border-[#31c266]/50 hover:shadow-xl hover:bg-white/95 dark:hover:bg-gray-900/95 transition-all duration-300 shadow-lg w-[12.5rem] relative overflow-hidden`}
+                className={`group flex items-center gap-3 px-4 w-[14rem] py-2.5 ${open ? 'rounded-t-xl border-b-0' : 'rounded-xl'} bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-[2px]  dark:border-gray-700/40 border-[#31c266]/50 hover:shadow-xl hover:bg-white/95 dark:hover:bg-gray-900/95 transition-all duration-300 shadow-lg w-[12.5rem] relative overflow-hidden`}
                 onClick={() => setOpen((o) => !o)}
                 aria-haspopup="true"
                 aria-expanded={open}
@@ -77,8 +77,8 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
                         </span>
                     </div>
                     
-                    <div className="flex-1 min-w-0">
-                        <span className="block text-sm font-semibold text-gray-900 dark:text-white leading-tight truncate">
+                    <div className="flex-1 min-w-0 overflow-hidden max-w-[7rem]">
+                        <span className="block text-sm font-semibold text-gray-900 dark:text-white leading-tight overflow-hidden whitespace-nowrap text-ellipsis">
                             {capitalize(user.username)}
                         </span>
                         <span className="block text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -94,7 +94,7 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
             </button>
             {open && (
                 <div 
-                    className="absolute left-0 top-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-[2px] border-t-0 border-green-600/40 dark:border-gray-700/40 rounded-b-xl shadow-xl py-1 w-[12.5rem] z-[9999]"
+                    className="absolute left-0 top-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-[2px] border-t-0 border-green-600/40 dark:border-gray-700/40 rounded-b-xl shadow-xl py-1 w-[14rem] z-[9999]"
                 >
                     <Link
                         to="/playlists"

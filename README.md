@@ -21,7 +21,7 @@
 - **Frontend**: React 18 + TypeScript
 - **Build Tool**: Vite
 - **Code Quality**: ESLint + TypeScript ESLint
-- **Package Manager**: npm/yarn
+- **Package Manager**: npm
 - **Hot Reload**: Vite HMR with React Fast Refresh
 
 ## Prerequisites
