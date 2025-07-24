@@ -26,6 +26,7 @@ export function PlaylistCard({
   // onDelete,
   gradient
 }: PlaylistCardProps) {
+
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', { 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Music, Heart } from "lucide-react";
 import { PlaylistCard } from "../components/app/Playlists/PlaylistCard";
 import { PlaylistDeleteModal } from "../components/app/Playlists/PlaylistDeleteModal";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "convex/_generated/dataModel";
 
@@ -258,12 +258,18 @@ function Playlists({ user }: PlaylistsProps) {
       return b._creationTime - a._creationTime;
     });
 
-  const toggleLike = (playlistId: string) => {
+  
+
+
+  const toggleLikeBackend = useMutation(api.playlistLikes.togglePlaylistLike);
+
+  const toggleLike = async (playlistId: string) => {
     setLikedPlaylists((prev) =>
       prev.includes(playlistId)
         ? prev.filter((id) => id !== playlistId)
         : [...prev, playlistId]
     );
+    await toggleLikeBackend({ userId: user.userId, playlistId: playlistId as Id<"playlists"> });
   };
 
   return (
