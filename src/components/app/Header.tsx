@@ -25,7 +25,7 @@ const Header = ({ isSpotifyConnected, setSpotifyConnected, user, signout }: Head
             <div className="relative z-10 flex justify-between items-center">
                 <div className="flex items-center bg-white/80">
                     <Link to="/" className="flex items-center">
-                        <AppLogo className="w-10 h-10 text-[#31c266] drop-shadow-sm" />
+                        <AppLogo className="w-12 h-8 text-[#31c266] drop-shadow-sm scale-[2.5]" />
                         <div className="ml-3">
                             <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-[#31c266] to-gray-700 dark:from-white dark:via-[#31c266] dark:to-gray-300 bg-clip-text text-transparent">
                                 TuneForger

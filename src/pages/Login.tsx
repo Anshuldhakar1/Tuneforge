@@ -69,8 +69,8 @@ const Login = () => {
                     <span
                         className={`inline-flex items-center gap-2 text-2xl font-bold transition-colors text-gray-900`}
                     >
-                        <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                            <AppLogo className=" text-white fill-white" />
+                        <div className="w-12 h-8 bg-green-500 rounded-lg flex items-center justify-center p-1">
+                            <AppLogo className="text-white fill-white w-full h-full" />
                         </div>
                         TuneForger
                     </span>
