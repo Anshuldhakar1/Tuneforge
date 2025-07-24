@@ -357,33 +357,52 @@ export const getOptimizedTracksFromSpotify = action({
             continue; // Try next query
           }
           
-          // Try to find exact match first
+          // Score each track based on similarity and use the best match
+          let bestScore = 0;
+          
           for (const track of tracks) {
-            const trackMatch = track.name.trim().toLowerCase() === cleanTrackName.toLowerCase();
-            const artistMatch = track.artists.some((artist: any) =>
-              artist.name.trim().toLowerCase() === cleanArtistName.toLowerCase()
-            );
+            let score = 0;
             
-            if (trackMatch && artistMatch) {
-              bestMatch = track;
-              break;
+            // Track name scoring
+            const trackNameLower = track.name.trim().toLowerCase();
+            const cleanTrackLower = cleanTrackName.toLowerCase();
+            
+            if (trackNameLower === cleanTrackLower) {
+              score += 50; // Exact match
+            } else if (trackNameLower.includes(cleanTrackLower) || cleanTrackLower.includes(trackNameLower)) {
+              score += 30; // Partial match
+            } else {
+              // Check for word overlap
+              const trackWords = trackNameLower.split(/\s+/);
+              const searchWords = cleanTrackLower.split(/\s+/);
+              const commonWords = trackWords.filter((word: string) => searchWords.includes(word));
+              score += commonWords.length * 10;
             }
-          }
-          
-          if (bestMatch) break;
-          
-          // Try partial match
-          for (const track of tracks) {
-            const trackMatch = track.name.trim().toLowerCase().includes(cleanTrackName.toLowerCase()) ||
-                              cleanTrackName.toLowerCase().includes(track.name.trim().toLowerCase());
-            const artistMatch = track.artists.some((artist: any) =>
-              artist.name.trim().toLowerCase().includes(cleanArtistName.toLowerCase()) ||
-              cleanArtistName.toLowerCase().includes(artist.name.trim().toLowerCase())
-            );
             
-            if (trackMatch && artistMatch) {
+            // Artist name scoring
+            const cleanArtistLower = cleanArtistName.toLowerCase();
+            const hasMatchingArtist = track.artists.some((artist: any) => {
+              const artistNameLower = artist.name.trim().toLowerCase();
+              
+              if (artistNameLower === cleanArtistLower) {
+                return true; // Exact artist match - add 40 points
+              } else if (artistNameLower.includes(cleanArtistLower) || cleanArtistLower.includes(artistNameLower)) {
+                score += 20; // Partial artist match
+                return true;
+              }
+              return false;
+            });
+            
+            if (hasMatchingArtist) {
+              score += 40; // Bonus for any artist match
+            }
+            
+            // Popularity bonus (small influence)
+            score += (track.popularity || 0) * 0.1;
+            
+            if (score > bestScore && score > 15) { // Lowered threshold for more matches
+              bestScore = score;
               bestMatch = track;
-              break;
             }
           }
           

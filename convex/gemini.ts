@@ -113,13 +113,15 @@ export const aiGenerate = action({
           });
         });
   
-        console.log("Raw AI response:", response.text);
+        // console.log("Raw AI response:", response.text);
         
         const parsedResponse = parsePlaylist(response.text ? response.text : "");
   
         if (!parsedResponse) {
           throw new Error("Failed to parse playlist response");
         }
+
+        
 
         // Get user ID from session token
         const userId = await _ctx.runQuery(api.auth.getUserBySessionToken, { token: args.token });
@@ -140,10 +142,13 @@ export const aiGenerate = action({
           userId: userId,
         });
 
+        // Use AI-generated name if user didn't provide one
+        const finalPlaylistName = args.playlistName.trim() || parsedResponse.playlist.name;
+
         // Create the playlist in our database
         const playlistId = await _ctx.runMutation(api.playlistCreation.createPlaylistWithTracks, {
           token: args.token,
-          playlistName: args.playlistName,
+          playlistName: finalPlaylistName,
           description: parsedResponse.playlist.description,
           mood: parsedResponse.playlist.mood,
           spotifyTracks: spotifyResult.tracks,
@@ -157,7 +162,7 @@ export const aiGenerate = action({
                 (t) => t.searchData?.trackName === track.trackName && t.searchData?.artistName === track.artistName
               )
           );
-          console.log("Tracks not found:", notFoundTracks);
+          // console.log("Tracks not found:", notFoundTracks);
         }
 
         return {
@@ -240,7 +245,7 @@ export const parsePlaylist = (aiOutput: string): PlaylistResponse | null => {
     try {
       data = JSON.parse(jsonStr);
     } catch (e) {
-      console.log("Initial JSON parse failed, attempting to fix formatting...");
+      // console.log("Initial JSON parse failed, attempting to fix formatting...");
       // Try to fix common JSON issues
       jsonStr = jsonStr
         .replace(/'([^']*)'/g, '"$1"') // single quotes to double quotes
@@ -253,7 +258,7 @@ export const parsePlaylist = (aiOutput: string): PlaylistResponse | null => {
         data = JSON.parse(jsonStr);
       } catch (e2) {
         console.error("Failed to parse JSON after cleanup:", e2);
-        console.log("Problematic JSON string:", jsonStr.substring(0, 500) + "...");
+        // console.log("Problematic JSON string:", jsonStr.substring(0, 500) + "...");
         return null;
       }
     }
@@ -290,7 +295,7 @@ export const parsePlaylist = (aiOutput: string): PlaylistResponse | null => {
       },
     };
   
-    console.log(`Successfully parsed playlist with ${normalizedTracks.length} valid tracks`);
+    // console.log(`Successfully parsed playlist with ${normalizedTracks.length} valid tracks`);
   
     return normalized;
 }

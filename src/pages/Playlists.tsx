@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Music } from "lucide-react";
+import { Music, Heart } from "lucide-react";
 import { PlaylistsToolbar } from "../components/app/Playlists/PlaylistToolbar";
 import { PlaylistCard } from "../components/app/Playlists/PlaylistCard";
 import { PlaylistDeleteModal } from "../components/app/Playlists/PlaylistDeleteModal";
@@ -89,16 +89,21 @@ function Playlists({ user }: PlaylistsProps) {
   const fetchedPlaylists = useQuery(api.playlistActions.getAllPlaylists, { userId: user.userId });
   const allPlaylists = fetchedPlaylists || [];
 
-  // Filter playlists based on search query and favorites
-  const playlists = allPlaylists.filter((playlist: { name: string; description: string; _id: string; }) => {
-    const matchesSearch = searchQuery === "" || 
-      playlist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (playlist.description && playlist.description.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesFavorites = !showFavoritesOnly || likedPlaylists.includes(playlist._id);
-    
-    return matchesSearch && matchesFavorites;
-  });
+  // Filter playlists based on search query and favorites, then sort by newest first
+  const playlists = allPlaylists
+    .filter((playlist: { name: string; description: string; _id: string; }) => {
+      const matchesSearch = searchQuery === "" || 
+        playlist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (playlist.description && playlist.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      
+      const matchesFavorites = !showFavoritesOnly || likedPlaylists.includes(playlist._id);
+      
+      return matchesSearch && matchesFavorites;
+    })
+    .sort((a: Doc<"playlists">, b: Doc<"playlists">) => {
+      // Sort by creation time, newest first
+      return b._creationTime - a._creationTime;
+    });
 
   const toggleLike = (playlistId: string) => {
     setLikedPlaylists((prev) =>
@@ -187,28 +192,114 @@ function Playlists({ user }: PlaylistsProps) {
         />
       </svg>
 
-      <div className="mb-8 relative z-10">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-3 h-3 bg-[#31c266] rounded-full animate-pulse" />
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-            Your Playlists
-          </h1>
+      {/* Card-style Header Section */}
+      <div className="relative mb-8 z-10">
+        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-6 shadow-lg">
+          <div className="flex justify-between items-center">
+            {/* Left Side - Compact Title */}
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 bg-[#31c266] rounded-full animate-pulse" />
+                <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  Your Playlists
+                </h1>
+              </div>
+              
+              {/* Quick Stats */}
+              <div className="flex items-center gap-4 ml-6">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="w-2 h-2 bg-[#31c266] rounded-full animate-pulse shadow-md" />
+                  <Music size={14} className="text-[#31c266]" />
+                  <span className="font-medium text-[#31c266]">{allPlaylists.length} total</span>
+                </div>
+                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-md" />
+                  <span className="font-medium text-red-600 dark:text-red-400">{likedPlaylists.length} favorited</span> 
+                </div>
+                <div className="w-px h-4 bg-gray-300 dark:bg-gray-600" />
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse shadow-md" />
+                  <span className="text-purple-600 dark:text-purple-400">Recent activity</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Right Side - Controls */}
+            <div className="flex items-center gap-3">
+              {/* Status Badge */}
+              <div className={`px-3 py-1.5 rounded-full border ${
+                showFavoritesOnly 
+                  ? 'bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-700'
+                  : searchQuery 
+                    ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700'
+                    : 'bg-[#31c266]/10 dark:bg-[#31c266]/20 border-[#31c266]/20 dark:border-[#31c266]/30'
+              }`}>
+                <span className={`text-sm font-medium flex items-center gap-1 ${
+                  showFavoritesOnly 
+                    ? 'text-red-700 dark:text-red-300'
+                    : searchQuery 
+                      ? 'text-blue-700 dark:text-blue-300'
+                      : 'text-[#31c266]'
+                }`}>
+                  {showFavoritesOnly && <Heart size={12}/>}
+                  {showFavoritesOnly 
+                    ? `Favorites Only (${playlists.length})` 
+                    : searchQuery 
+                      ? `"${searchQuery.slice(0, 12)}${searchQuery.length > 12 ? '...' : ''}" (${playlists.length})`
+                      : 'All Playlists'}
+                </span>
+              </div>
+              
+              {/* Clear Filters Button */}
+              {(searchQuery || showFavoritesOnly) && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setShowFavoritesOnly(false);
+                  }}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+                >
+                  <span className="text-xs font-medium">Clear</span>
+                </button>
+              )}
+            </div>
+          </div>
+          
+          {/* Search and Controls Bar */}
+          <div className="mt-4 pt-3 border-t border-gray-200/50 dark:border-gray-700/50">
+            <div className="flex items-center gap-4">
+              {/* Extended Search Bar */}
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  placeholder="Search playlists..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#31c266]/30 focus:border-[#31c266] transition-all shadow-sm"
+                />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Music size={16} className="text-gray-400" />
+                </div>
+              </div>
+              
+              {/* Favorites Toggle */}
+              <button
+                onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-200 ${
+                  showFavoritesOnly
+                    ? 'bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-700 text-red-700 dark:text-red-300'
+                    : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full ${showFavoritesOnly ? 'bg-red-400' : 'bg-gray-400'}`} />
+                <span className="text-sm font-medium">
+                  Favorites
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="w-16 h-1.5 bg-gradient-to-r from-[#31c266] to-[#31c266]/60 rounded-full mt-2 mb-3 shadow-sm" />
-        <p className="text-gray-600 dark:text-gray-300 text-lg font-medium leading-relaxed">
-          Discover and manage your curated music collections
-        </p>
-        {/* Subtle accent line */}
-        <div className="absolute -left-2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#31c266]/50 to-transparent rounded-full" />
-      </div>
-
-      <div className="relative z-10 mb-6">
-        <PlaylistsToolbar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          showFavoritesOnly={showFavoritesOnly}
-          setShowFavoritesOnly={setShowFavoritesOnly}
-        />
       </div>
 
       <div className="flex gap-6 flex-wrap relative z-10">

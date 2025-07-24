@@ -37,9 +37,10 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
 
-  console.log(user);
+  // console.log(user);
 
   const generate = useAction(api.gemini.aiGenerate);
+  const navigate = useNavigate();
 
   const curatedPlaylists: CuratedPlaylist[] = [
     {
@@ -136,7 +137,6 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
         });
       
       // navigate to your playlists when generation is complete
-      const navigate = useNavigate();
       setTimeout(() => {
         navigate("/playlists");
       }, 2000);
@@ -151,6 +151,25 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
   const handleCuratedClick = (playlist: CuratedPlaylist) => {
     setDescription(playlist.title)
     setPlaylistName("")
+    
+    // Smooth scroll to the playlist form
+    setTimeout(() => {
+      // Try multiple selectors to find the form
+      const playlistForm = document.querySelector('form');
+      
+      if (playlistForm) {
+        playlistForm.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      } else {
+        // Fallback: scroll to a reasonable position
+        window.scrollTo({ 
+          top: window.innerHeight * 0.3, 
+          behavior: 'smooth' 
+        });
+      }
+    }, 100);
   }
 
   if (loading) return <LoadingScreen />
