@@ -1,5 +1,9 @@
 import { Heart, Share2, Download } from "lucide-react";
 import clsx from "clsx";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import type { Id } from "convex/_generated/dataModel";
+import { useEffect } from "react";
 
 type PlaylistActionsProps = {
   liked: boolean;
@@ -47,6 +51,8 @@ export function PlaylistActions({
     URL.revokeObjectURL(url);
   };
 
+  const toggleLikeBackend = useMutation(api.playlistLikes.togglePlaylistLike);
+
   const handleSpotifyAction = () => {
     if (spotifyPlaylistUrl) {
       // Open existing Spotify playlist
@@ -56,6 +62,25 @@ export function PlaylistActions({
       onExportToSpotify();
     }
   };
+
+  const sessionToken = localStorage.getItem("session_token");
+  const userId = sessionToken ?
+    useQuery(api.auth.getUserBySessionToken, { token: sessionToken }) : null;
+
+  if (!userId) {
+    console.error("No user ID found");
+  }
+
+  const isLiked = useQuery(api.playlistLikes.isPlaylistLiked, {
+    userId: userId as Id<"users">,
+    playlistId: playlistData.id as Id<"playlists">
+  })
+
+  useEffect(() => {
+    if (isLiked !== undefined) {
+      setLiked(() => isLiked);
+    }
+  }, [isLiked]);
 
   return (
     <div>
@@ -67,7 +92,10 @@ export function PlaylistActions({
               ? "bg-red-50/80 dark:bg-red-900/20 border-red-200 dark:border-red-700 ring-2 ring-red-400/30"
               : "bg-white/80 dark:bg-gray-900/80 border-gray-200 dark:border-gray-700 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e]"
           )}
-          onClick={() => setLiked((l) => !l)}
+          onClick={ async () => {
+            setLiked((l) => !l);
+            await toggleLikeBackend({ userId: userId as Id<"users">, playlistId: playlistData.id as Id<"playlists"> });
+          }}
           aria-label="Like playlist"
         >
           <Heart

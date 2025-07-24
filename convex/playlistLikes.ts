@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { api } from "./_generated/api";
 
 export const getUserLiked = query({
     args: { userId: v.id("users") },
@@ -10,6 +9,19 @@ export const getUserLiked = query({
             .collect();
     },
 });
+
+export const isPlaylistLiked = query({
+    args: {
+        userId: v.id("users"),
+        playlistId: v.id("playlists")
+    },
+    handler: async (ctx, args) => {
+        return await ctx.db.query("playlistLikes")
+            .withIndex("byUserId", (q) => q.eq("userId", args.userId))
+            .filter((q) => q.eq(q.field("playlistId"), args.playlistId))
+            .first() ? true: false;
+    }
+})
 
 export const togglePlaylistLike = mutation({
     args: {

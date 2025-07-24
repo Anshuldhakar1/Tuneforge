@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Music, Heart } from "lucide-react";
+import { Music } from "lucide-react";
 import { PlaylistCard } from "../components/app/Playlists/PlaylistCard";
 import { PlaylistDeleteModal } from "../components/app/Playlists/PlaylistDeleteModal";
 import { useMutation, useQuery } from "convex/react";
@@ -257,9 +257,6 @@ function Playlists({ user }: PlaylistsProps) {
     .sort((a: Doc<"playlists">, b: Doc<"playlists">) => {
       return b._creationTime - a._creationTime;
     });
-
-  
-
 
   const toggleLikeBackend = useMutation(api.playlistLikes.togglePlaylistLike);
 

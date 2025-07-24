@@ -37,7 +37,7 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
   const [isGenerating, setIsGenerating] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
 
-  // console.log(user);
+  console.log(user);
 
   const generate = useAction(api.gemini.aiGenerate);
   const navigate = useNavigate();
