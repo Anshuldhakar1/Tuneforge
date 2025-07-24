@@ -90,13 +90,37 @@ export function PlaylistCard({
       <div className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border ${gradient.border} dark:border-gray-700 transform hover:-translate-y-1`}>
         
         {/* Header Section with Gradient Background */}
-        <div className={`relative h-32 ${gradient.bg} flex items-end justify-between p-4 overflow-hidden`}>
+        <div className={`relative h-[9rem] ${gradient.bg} flex items-end justify-between p-4 overflow-hidden`}>
           {/* Enhanced Decorative Elements */}
           <div className="absolute top-4 right-4 w-12 h-12 bg-white/20 rounded-full backdrop-blur-sm animate-pulse" />
           <div className="absolute bottom-2 left-2 w-6 h-6 bg-white/30 rounded-full backdrop-blur-sm" />
           <div className="absolute top-6 left-6 w-8 h-8 bg-white/10 rounded-full backdrop-blur-sm" />
           <div className="absolute -top-2 -right-2 w-16 h-16 bg-white/5 rounded-full backdrop-blur-sm" />
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-white/5 rounded-full backdrop-blur-sm" />
+          
+          {/* Additional decorative bubbles */}
+          <div className="absolute top-1 left-1/3 w-4 h-4 bg-white/15 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-6 right-8 w-10 h-10 bg-white/8 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-8 right-1/4 w-3 h-3 bg-white/25 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-1 left-1/4 w-5 h-5 bg-white/12 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-3 left-3/4 w-2 h-2 bg-white/35 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-4 right-1/3 w-7 h-7 bg-white/6 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-1/4 left-1/5 w-3 h-3 bg-white/18 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-8 left-3/4 w-4 h-4 bg-white/14 rounded-full backdrop-blur-sm" />
+          
+          {/* Extra decorative bubbles for more visual interest */}
+          <div className="absolute top-2 left-1/2 w-3 h-3 bg-white/22 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-3 right-1/2 w-2 h-2 bg-white/28 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-5 right-3/4 w-1.5 h-1.5 bg-white/40 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-7 left-1/6 w-6 h-6 bg-white/9 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-1/3 right-1/5 w-2.5 h-2.5 bg-white/20 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-5 left-2/3 w-3.5 h-3.5 bg-white/16 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-7 left-1/6 w-1 h-1 bg-white/45 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-2 right-2/3 w-4.5 h-4.5 bg-white/11 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-1/5 left-5/6 w-2 h-2 bg-white/32 rounded-full backdrop-blur-sm" />
+          <div className="absolute bottom-1/3 right-1/6 w-1.5 h-1.5 bg-white/38 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-4/5 left-1/3 w-2.5 h-2.5 bg-white/19 rounded-full backdrop-blur-sm" />
+          <div className="absolute top-0 right-1/2 w-5 h-5 bg-white/13 rounded-full backdrop-blur-sm" />
           
           {/* Animated gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 opacity-0 group-hover:opacity-100 group-hover:animate-pulse transition-opacity duration-300" />
@@ -142,7 +166,7 @@ export function PlaylistCard({
         </div>
         
         {/* Content Section */}
-        <div className="p-4 space-y-3 relative">
+        <div className="p-4 pt-2 space-y-3 relative">
           {/* Subtle background pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-2 right-4 w-2 h-2 bg-gray-400 rounded-full" />

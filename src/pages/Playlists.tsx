@@ -226,6 +226,7 @@ function Playlists({ user }: PlaylistsProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [likedPlaylists, setLikedPlaylists] = useState<string[]>([]);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [showSpotifyOnly, setShowSpotifyOnly] = useState(false);
   const [deleteModal, setDeleteModal] = useState<null | string>(null);
 
   // Fetch playlists using Convex query
@@ -243,14 +244,15 @@ function Playlists({ user }: PlaylistsProps) {
   }, [userLikedPlaylists]);
 
   const playlists = allPlaylists
-    .filter((playlist: { name: string; description: string; _id: string; }) => {
+    .filter((playlist: { name: string; description: string; _id: string; spotifyPlaylistUrl?: string; }) => {
       const matchesSearch = searchQuery === "" || 
         playlist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (playlist.description && playlist.description.toLowerCase().includes(searchQuery.toLowerCase()));
       
       const matchesFavorites = !showFavoritesOnly || likedPlaylists.includes(playlist._id);
+      const matchesSpotify = !showSpotifyOnly || playlist.spotifyPlaylistUrl;
       
-      return matchesSearch && matchesFavorites;
+      return matchesSearch && matchesFavorites && matchesSpotify;
     })
     .sort((a: Doc<"playlists">, b: Doc<"playlists">) => {
       return b._creationTime - a._creationTime;
@@ -377,36 +379,62 @@ function Playlists({ user }: PlaylistsProps) {
             
             {/* Right Side - Controls */}
             <div className="flex items-center gap-3">
-              {/* Status Badge */}
-              <div className={`px-3 py-1.5 rounded-full border ${
-                showFavoritesOnly 
-                  ? 'bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-700'
-                  : searchQuery 
-                    ? 'bg-blue-100 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700'
-                    : 'bg-[#31c266]/10 dark:bg-[#31c266]/20 border-[#31c266]/20 dark:border-[#31c266]/30'
-              }`}>
-                <span className={`text-sm font-medium flex items-center gap-1 ${
-                  showFavoritesOnly 
-                    ? 'text-red-700 dark:text-red-300'
-                    : searchQuery 
-                      ? 'text-blue-700 dark:text-blue-300'
-                      : 'text-[#31c266]'
-                }`}>
-                  {showFavoritesOnly && <Heart size={12}/>}
-                  {showFavoritesOnly 
-                    ? `Favorites Only (${playlists.length})` 
-                    : searchQuery 
-                      ? `"${searchQuery.slice(0, 12)}${searchQuery.length > 12 ? '...' : ''}" (${playlists.length})`
-                      : 'All Playlists'}
-                </span>
+              {/* Status Badges - Multiple can be active */}
+              <div className="flex items-center gap-2">
+                {/* Search Badge */}
+                {searchQuery && (
+                  <div className="px-3 py-1.5 rounded-full border bg-blue-100 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700">
+                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                      "{searchQuery.slice(0, 12)}${searchQuery.length > 12 ? '...' : ''}"
+                    </span>
+                  </div>
+                )}
+                
+                {/* Favorites Badge */}
+                {showFavoritesOnly && (
+                  <div className="px-3 py-1.5 rounded-full border bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-700">
+                    <span className="text-sm font-medium flex items-center gap-1 text-red-700 dark:text-red-300">
+                      
+                      Favorites Only
+                    </span>
+                  </div>
+                )}
+                
+                {/* Spotify Badge */}
+                {showSpotifyOnly && (
+                  <div className="px-3 py-1.5 rounded-full border bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-700">
+                    <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                      Spotify Only
+                    </span>
+                  </div>
+                )}
+                
+                {/* All Playlists Badge (when no filters active) */}
+                {!searchQuery && !showFavoritesOnly && !showSpotifyOnly && (
+                  <div className="px-3 py-1.5 rounded-full border bg-[#31c266]/10 dark:bg-[#31c266]/20 border-[#31c266]/20 dark:border-[#31c266]/30">
+                    <span className="text-sm font-medium text-[#31c266]">
+                      All Playlists ({playlists.length})
+                    </span>
+                  </div>
+                )}
+                
+                {/* Results Count Badge (when filters are active) */}
+                {(searchQuery || showFavoritesOnly || showSpotifyOnly) && (
+                  <div className="px-3 py-1.5 rounded-full border bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {playlists.length} results
+                    </span>
+                  </div>
+                )}
               </div>
               
               {/* Clear Filters Button */}
-              {(searchQuery || showFavoritesOnly) && (
+              {(searchQuery || showFavoritesOnly || showSpotifyOnly) && (
                 <button
                   onClick={() => {
                     setSearchQuery("");
                     setShowFavoritesOnly(false);
+                    setShowSpotifyOnly(false);
                   }}
                   className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
                 >
@@ -447,12 +475,27 @@ function Playlists({ user }: PlaylistsProps) {
                   Favorites
                 </span>
               </button>
+
+              {/* Spotify Toggle */}
+              <button
+                onClick={() => setShowSpotifyOnly(!showSpotifyOnly)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl border transition-all duration-200 ${
+                  showSpotifyOnly
+                    ? 'bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-700 text-green-700 dark:text-green-300'
+                    : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                <div className={`w-2 h-2 rounded-full ${showSpotifyOnly ? 'bg-green-500' : 'bg-gray-400'}`} />
+                <span className="text-sm font-medium">
+                  Spotify
+                </span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex gap-6 flex-wrap relative z-10">
+      <div className="grid grid-cols-3 gap-6 relative z-10">
         {playlists.length > 0 && playlists.map((playlist: Doc<"playlists">) => (
           <PlaylistCard
             key={playlist._id}

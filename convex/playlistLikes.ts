@@ -10,3 +10,8 @@ export const getUserLiked = query({
     },
 });
 
+
+// add playlist like functionality
+// add a little animation when user likes and dislikes a playlist
+// sync the playlist page to work with the like system too
+// MOBILE
