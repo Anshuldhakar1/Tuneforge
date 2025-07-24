@@ -144,12 +144,6 @@ export function PlaylistCard({
               } hover:scale-110 active:scale-95`}
               aria-label={liked ? "Unlike playlist" : "Like playlist"}
             >
-              {/* Decorative background elements */}
-              {/* <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-50" />
-              <div className="absolute top-1 right-1 w-2 h-2 bg-white/30 rounded-full animate-pulse" />
-              <div className="absolute bottom-1 left-1 w-1 h-1 bg-white/40 rounded-full" /> */}
-              
-              {/* Animated ripple effect on click */}
               <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-active/like:scale-150 group-active/like:opacity-0 transition-all duration-300" />
               
               <Heart
@@ -196,7 +190,10 @@ export function PlaylistCard({
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate relative">
                 {playlist.name}
                 {/* Subtle underline accent */}
-                <div className={`absolute -bottom-1 left-0 h-0.5 w-1/3 bg-${gradient.accent} opacity-30 group-hover:opacity-60 transition-opacity duration-300`} />
+                <div 
+                  className="absolute -bottom-1 left-0 h-0.5 w-1/3 opacity-30 group-hover:opacity-60 transition-opacity duration-300"
+                  style={{ backgroundColor: getColorStyle(gradient.accent) }}
+                />
               </h3>
               {playlist.description && (
                 <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">
@@ -232,7 +229,10 @@ export function PlaylistCard({
           {/* Metadata */}
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-1">
-              <div className={`w-1.5 h-1.5 rounded-full bg-${gradient.accent} opacity-50`} />
+              <div 
+                className="w-1.5 h-1.5 rounded-full opacity-50"
+                style={{ backgroundColor: getColorStyle(gradient.accent) }}
+              />
               Created {formatDate(playlist.createdAt)}
             </span>
             <div className="flex items-center gap-2">
@@ -250,10 +250,16 @@ export function PlaylistCard({
         <div className="absolute inset-0 bg-gradient-to-br from-black/0 via-black/5 to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         
         {/* Animated Bottom Border Accent */}
-        <div className={`absolute bottom-0 left-0 right-0 h-1 bg-${gradient.accent} opacity-60 group-hover:opacity-100 transition-all duration-300 transform origin-left scale-x-0 group-hover:scale-x-100`} />
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-1 opacity-60 group-hover:opacity-100 transition-all duration-300 transform origin-left scale-x-0 group-hover:scale-x-100"
+          style={{ backgroundColor: getColorStyle(gradient.accent) }}
+        />
         
         {/* Side accent line */}
-        <div className={`absolute left-0 top-0 bottom-0 w-1 bg-${gradient.accent} opacity-40 group-hover:opacity-80 transition-opacity duration-300`} />
+        <div 
+          className="absolute left-0 top-0 bottom-0 w-1 opacity-40 group-hover:opacity-80 transition-opacity duration-300"
+          style={{ backgroundColor: getColorStyle(gradient.accent) }}
+        />
       </div>
     </div>
   );

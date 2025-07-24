@@ -385,7 +385,7 @@ function Playlists({ user }: PlaylistsProps) {
                 {searchQuery && (
                   <div className="px-3 py-1.5 rounded-full border bg-blue-100 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700">
                     <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
-                      "{searchQuery.slice(0, 12)}${searchQuery.length > 12 ? '...' : ''}"
+                      "{searchQuery.slice(0, 12)}{searchQuery.length > 12 ? '...' : ''}"
                     </span>
                   </div>
                 )}
