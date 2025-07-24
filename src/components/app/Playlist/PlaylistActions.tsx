@@ -67,14 +67,12 @@ export function PlaylistActions({
   const userId = sessionToken ?
     useQuery(api.auth.getUserBySessionToken, { token: sessionToken }) : null;
 
-  if (!userId) {
-    console.error("No user ID found");
-  }
-
-  const isLiked = useQuery(api.playlistLikes.isPlaylistLiked, {
-    userId: userId as Id<"users">,
-    playlistId: playlistData.id as Id<"playlists">
-  })
+  const isLiked = useQuery(api.playlistLikes.isPlaylistLiked, 
+    (userId && sessionToken) ? {
+      userId: userId as Id<"users">,
+      playlistId: playlistData.id as Id<"playlists">
+    } : "skip"
+  )
 
   useEffect(() => {
     if (isLiked !== undefined) {
@@ -93,6 +91,7 @@ export function PlaylistActions({
               : "bg-white/80 dark:bg-gray-900/80 border-gray-200 dark:border-gray-700 hover:bg-[#eafaf2] dark:hover:bg-[#223c2e]"
           )}
           onClick={ async () => {
+            if (!userId) return;
             setLiked((l) => !l);
             await toggleLikeBackend({ userId: userId as Id<"users">, playlistId: playlistData.id as Id<"playlists"> });
           }}

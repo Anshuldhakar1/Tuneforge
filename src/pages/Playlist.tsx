@@ -158,7 +158,7 @@ const Playlist: React.FC<PlaylistProps> = ({ user, isSpotifyConnected }) => {
         releaseDate: track.releaseDate,
     })) || [];
 
-    console.log(formattedTracks);
+    // console.log(formattedTracks);
 
     const firstFourTrackCovers = formattedTracks.slice(0, 4).map(track => ({
         coverUrl: track.coverUrl || "",

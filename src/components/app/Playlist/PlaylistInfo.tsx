@@ -121,7 +121,7 @@ export function PlaylistInfo({
       {/* Content */}
       <div className="flex-1">
         {/* Subtle Gradient Title */}
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 leading-tight">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-4 leading-tight break-words max-w-3xl">
           <span className="bg-gradient-to-r from-gray-700 via-[#31c266] to-emerald-600 dark:from-gray-300 dark:via-emerald-400 dark:to-emerald-500 bg-clip-text text-transparent">
             {name}
           </span>
