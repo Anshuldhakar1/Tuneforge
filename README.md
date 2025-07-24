@@ -1,8 +1,7 @@
 # Tuneforger
 
 <div align="center">
-  <img src="./public/logo.png" alt="Tuneforger Logo" width="200" height="200">
-  <p><em>AI-Powered Spotify Playlist Generator</em></p>
+  ![Tuneforger](./public/tuneforger-logo.svg)
 </div>
 
 An AI-powered playlist generator that creates personalized Spotify playlists using artificial intelligence. Tuneforger analyzes your music preferences and generates curated playlists tailored to your taste, mood, or specific requirements.
