@@ -85,7 +85,7 @@ export function PlaylistCard({
   };
 
   return (
-    <div className="group relative w-full max-w-sm mx-auto" data-playlist-id={playlist._id}>
+    <div className="group relative w-full max-w-[25rem] mx-auto" data-playlist-id={playlist._id}>
       {/* Main Card Container */}
       <div className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border ${gradient.border} dark:border-gray-700 transform hover:-translate-y-1`}>
         
@@ -165,11 +165,22 @@ export function PlaylistCard({
                   e.stopPropagation();
                   window.open(playlist.spotifyPlaylistUrl, '_blank', 'noopener,noreferrer');
                 }}
-                className="p-2 rounded-full bg-green-500 hover:bg-green-600 text-white hover:scale-110 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="relative p-3 rounded-full backdrop-blur-md transition-all duration-300 shadow-lg hover:shadow-xl overflow-hidden group/spotify bg-gradient-to-r from-green-500/90 to-emerald-500/90 hover:from-green-600/90 hover:to-emerald-600/90 border border-green-400/50 hover:border-green-300/60 hover:scale-110 active:scale-95"
                 title="Open in Spotify"
                 aria-label="Open playlist in Spotify"
               >
-                <ExternalLink size={14} />
+                {/* Ripple effect on click */}
+                <div className="absolute inset-0 rounded-full bg-white/20 scale-0 group-active/spotify:scale-150 group-active/spotify:opacity-0 transition-all duration-300" />
+                
+                <ExternalLink 
+                  size={14} 
+                  stroke="#ffffff"
+                  className="relative z-10 transition-all duration-300 group-active/spotify:scale-125 group-hover/spotify:drop-shadow-sm"
+                  strokeWidth={2}
+                />
+                
+                {/* Shine effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 opacity-0 group-hover/spotify:opacity-100 group-hover/spotify:translate-x-full transition-all duration-500" />
               </button>
             )}
           </div>

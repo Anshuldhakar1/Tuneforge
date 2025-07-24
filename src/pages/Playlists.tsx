@@ -495,7 +495,7 @@ function Playlists({ user }: PlaylistsProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6 relative z-10">
+      <div className="grid grid-cols-3 gap-3 gap-y-6 relative z-10">
         {playlists.length > 0 && playlists.map((playlist: Doc<"playlists">) => (
           <PlaylistCard
             key={playlist._id}
