@@ -96,11 +96,6 @@ const PlaylistForm = ({
                             className="w-full px-5 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-3 focus:ring-[#31c266]/40 focus:border-[#31c266] text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 bg-white/95 dark:bg-gray-700/95 backdrop-blur-sm shadow-sm transition-all duration-300 text-sm font-medium group-hover:shadow-md"
                         />
                         
-                        {/* Magic sparkle icon */}
-                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                            <Sparkles className="w-4 h-4 text-[#31c266]/60 animate-pulse" />
-                        </div>
-                        
                         {/* Focus indicator */}
                         <div className="absolute inset-0 rounded-xl border-2 border-[#31c266]/0 group-focus-within:border-[#31c266]/30 transition-all duration-300 pointer-events-none" />
                     </div>
@@ -113,10 +108,6 @@ const PlaylistForm = ({
                         disabled={!description.trim() || isGenerating}
                         className="w-full group relative bg-gradient-to-r from-[#31c266] to-emerald-600 hover:from-[#2eb55f] hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl disabled:cursor-not-allowed transform hover:-translate-y-0.5 disabled:transform-none"
                     >
-                        {/* Subtle shine effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-500 opacity-0 group-hover:opacity-100" />
-                        
-                        <AnimatePresence mode="wait">
                             {isGenerating ? (
                                 <div key="generating" className="flex items-center gap-3 relative z-10">
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -124,12 +115,9 @@ const PlaylistForm = ({
                                 </div>
                             ) : (
                                 <div key="generate" className="flex items-center gap-3 relative z-10">
-                                    <Zap className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
                                     <span className="text-base font-semibold">Generate Playlist</span>
-                                    <Sparkles className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-200" />
                                 </div>
                             )}
-                        </AnimatePresence>
                     </button>
                 </div>
 

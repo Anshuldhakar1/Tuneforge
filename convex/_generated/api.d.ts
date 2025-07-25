@@ -23,6 +23,7 @@ import type * as playlistLikes from "../playlistLikes.js";
 import type * as spotify from "../spotify.js";
 import type * as spotifyAuth from "../spotifyAuth.js";
 import type * as spotifyCreate from "../spotifyCreate.js";
+import type * as spotifyStats from "../spotifyStats.js";
 import type * as tracks from "../tracks.js";
 
 /**
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   spotify: typeof spotify;
   spotifyAuth: typeof spotifyAuth;
   spotifyCreate: typeof spotifyCreate;
+  spotifyStats: typeof spotifyStats;
   tracks: typeof tracks;
 }>;
 export declare const api: FilterApi<

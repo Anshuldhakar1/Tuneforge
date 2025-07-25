@@ -25,8 +25,13 @@ export const getSpotifyAuthUrl = query({
       "playlist-modify-private",
       "user-read-private",
       "user-read-email",
+      "user-top-read",
+      "playlist-read-private",
+      "user-library-read",
+      "playlist-read-collaborative",
+      "user-read-recently-played",
     ].join(" ");
-    
+     
     const params = new URLSearchParams({
       response_type: "code",
       client_id: SPOTIFY_CLIENT_ID,

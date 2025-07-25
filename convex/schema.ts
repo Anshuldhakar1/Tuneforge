@@ -65,4 +65,20 @@ export default defineSchema({
     spotifyDisplayName: v.optional(v.string()),
     scope: v.optional(v.string()),
   }).index("byUserId", ["userId"]),
+
+  spotifyStats: defineTable({
+    userId: v.id("users"),
+    totalTracks: v.number(),
+    totalArtists: v.number(),
+    totalPlaylists: v.number(),
+    totalHoursListened: v.number(),
+    topArtist: v.string(),
+    topArtistCover: v.string(),
+    topTrack: v.string(),
+    topTrackArtist: v.string(),
+    topTrackCover: v.string(),
+    topArtistCovers: v.array(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("byUserId", ["userId"]),
 });
