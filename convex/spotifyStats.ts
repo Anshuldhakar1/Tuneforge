@@ -59,7 +59,7 @@ export const getSpotifyStats = action({
   args: { accessToken: v.string(), userId: v.id("users") },
   handler: async (ctx, { accessToken, userId }) => {
     try {
-      console.log("🔁 Starting Spotify stats collection...");
+      // console.log("🔁 Starting Spotify stats collection...");
 
       const headers = {
         Authorization: `Bearer ${accessToken}`,
@@ -68,10 +68,10 @@ export const getSpotifyStats = action({
 
       // Helper: Fetch wrapper with logs
       const fetchWithLog = async (label: string, url: string): Promise<any> => {
-        console.log(`📡 Fetching ${label}...`);
+        // console.log(`📡 Fetching ${label}...`);
         const res = await fetch(url, { headers });
         if (!res.ok) {
-          console.error(`❌ Failed to fetch ${label}`, await res.text());
+          // console.error(`❌ Failed to fetch ${label}`, await res.text());
           return null;
         }
         return res.json();
@@ -85,9 +85,12 @@ export const getSpotifyStats = action({
           `top tracks (${range})`,
           `https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=${range}`
         );
-        if (data?.items?.length > 0) {
+        if (!data) {
+          return null;
+        }
+        if (data.items.length > 0) {
           tracksData = data;
-          console.log(`✅ Got ${data.items.length} top tracks from ${range}`);
+          // console.log(`✅ Got ${data.items.length} top tracks from ${range}`);
           break;
         }
       }
@@ -163,11 +166,11 @@ export const getSpotifyStats = action({
           const dailyMs = recentMs / timeSpanDays;
           const estimatedMonthlyMs = dailyMs * 30;
           estimatedHoursListened = Math.round(estimatedMonthlyMs / (1000 * 60 * 60));
-          console.log(`🕒 Estimated monthly hours: ${estimatedHoursListened} (based on ${timeSpanDays.toFixed(1)} days of data)`);
+          // console.log(`🕒 Estimated monthly hours: ${estimatedHoursListened} (based on ${timeSpanDays.toFixed(1)} days of data)`);
         }
       }
 
-      console.log(`🕒 Estimated hours listened: ${estimatedHoursListened}`);
+      // console.log(`🕒 Estimated hours listened: ${estimatedHoursListened}`);
 
       // 2️⃣ Top Artists
       const topArtistsData = await fetchWithLog(
@@ -204,7 +207,7 @@ export const getSpotifyStats = action({
         topArtistCovers,
       };
 
-      console.log("🎉 All data collected successfully:", result);
+      // console.log("🎉 All data collected successfully:", result);
       
       // Save stats to database
       await ctx.runMutation(api.spotifyStats.saveSpotifyStats, {

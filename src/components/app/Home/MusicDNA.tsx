@@ -1,26 +1,70 @@
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
-import { useQuery } from "convex/react";
-import { Headphones, Heart, User, Calendar } from "lucide-react";
-interface MusicDNAProps {
-    isSpotifyConnected: boolean;
-}
+import { useAction, useQuery } from "convex/react";
+import { Headphones, Heart, User, Calendar } from "lucide-react"; 
+import { toast } from "sonner";
 
-const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
+const MusicDNA = () => {
     const sessionToken = localStorage.getItem("session_token");
     
-    // Use hooks at the top level - pass null token if no session token exists
     const userId = useQuery(api.auth.getUserBySessionToken, 
         sessionToken ? { token: sessionToken } : "skip"
     );
     
-    // Only query user music data if we have a valid userId
     const userMusicData = useQuery(api.spotifyStats.getUserSpotifyStats, 
         userId ? { userId: userId as Id<"users"> } : "skip"
     );
     if (!sessionToken) {
         console.error("No session token found");
         return null;
+    }
+
+    const spotifyData = useQuery(api.spotifyAuth.getSpotifyTokensById,
+        userId ? { userId: userId as Id<"users"> } : "skip"
+    );
+    const spotifyAccessToken = spotifyData?.accessToken;
+
+    // check if the token is expired
+    const isTokenExpired = () => {
+        if (!spotifyData || !spotifyData.expiresAt) return true;
+        
+        const expiresAt = new Date(spotifyData.expiresAt);
+        const now = new Date();
+        
+        const bufferTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        return now.getTime() + bufferTime >= expiresAt.getTime();
+    };
+
+    const fetchStatsFromSpotify = useAction(api.spotifyStats.getSpotifyStats);
+
+    const buttonHandler = async () => {
+
+
+        if (!spotifyAccessToken) {
+            toast.error("User not logged into spotify", {
+                description: "Please log in to Spotify to get your stats.",
+            });
+            return;
+        }
+
+        if (isTokenExpired()) {
+            toast.error("Spotify Access token is expired or about to expire", {
+                description: "Please re-log in to Spotify to get your stats.",
+            });
+            return;
+        }
+
+        if (isTokenExpired()) {
+            toast.error("Spotify session expired", {
+                description: "Your Spotify session has expired. Please reconnect to Spotify.",
+            });
+            return;
+        }
+
+        await fetchStatsFromSpotify({
+            userId: userId as Id<"users">,
+            accessToken: spotifyAccessToken
+        })
     }
 
     return (
@@ -67,7 +111,7 @@ const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
                         </svg>
 
                         {userMusicData.topArtistCovers?.slice(0, 5).map((cover, index) => {
-                            // Create more balanced positions using a grid-like approach
+                           
                             const positions = [
                                 { top: '15%', left: '15%' },    // Top left
                                 { top: '15%', left: '75%' },    // Top right
@@ -104,9 +148,7 @@ const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
 
                     </div>
 
-                    {/* Main Content */}
                     <div className="relative z-10">
-                        {/* Top Track Display */}
 
                         <div className="mb-2 px-3 pb-4 rounded-lg bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50">
                             <div className="p-3 flex items-center justify-center">
@@ -150,15 +192,15 @@ const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
 
                             {/* Stats Cards Grid - Compact Design */}
                             <div className="grid grid-cols-2 gap-2 mt-2">
-                                <div className="flex items-center p-1.5 rounded-lg bg-emerald-100/75 dark:bg-emerald-900/30 border border-emerald-200/70 dark:border-emerald-800/60 shadow-sm">
-                                    <div className="flex-shrink-0 flex items-center justify-center w-7 h-7 bg-emerald-500/20 rounded-full mr-2">
-                                        <Headphones className="w-3 h-3 text-emerald-600 dark:text-emerald-300" />
+                                <div className="flex items-center p-1.5 rounded-lg bg-red-100/75 dark:bg-red-900/30 border border-emerald-200/70 dark:border-emerald-800/60 shadow-sm">
+                                    <div className="flex-shrink-0 flex items-center justify-center w-7 h-7 bg-red-500/20 rounded-full mr-2">
+                                        <Headphones className="w-3 h-3 text-red-600 dark:text-red-300" />
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-[0.55rem] font-bold text-emerald-800/70 dark:text-emerald-300/80 uppercase tracking-wider">
+                                        <span className="text-[0.55rem] font-bold text-red-800/70 dark:text-red-300/80 uppercase tracking-wider">
                                             Tracks
                                         </span>
-                                        <span className="text-sm font-bold text-emerald-900 dark:text-emerald-100">
+                                        <span className="text-sm font-bold text-red-900 dark:text-red-100">
                                             {userMusicData.totalTracks?.toLocaleString()}
                                         </span>
                                     </div>
@@ -207,20 +249,32 @@ const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Top Artist Display */}
-                        
-
-                        
                     </div>
                 </div>
-            ) : (<></>)}
+            ) : (
+                <div className="relative px-6 py-2">
+                    <div className="mb-2 p-3 rounded-2xl bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-700/50 flex flex-col items-center justify-center">
+                        <div className="text-center">
+                            <div className="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-3">
+                                <Headphones className="w-8 h-8 text-green-600 dark:text-green-400" />
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
+                                No Music Stats Yet
+                            </h3>
+                            <p className="text-gray-600 dark:text-gray-300 mb-3 max-w-xs mx-auto">
+                                Click the button below to analyze your listening habits and discover your music insights.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
             
             <div className="w-full flex justify-center relative z-10">
-                <button className=" relative overflow-hidden inline-flex scale-[0.85] items-center gap-3 px-8 py-4 m-4 mt-0 rounded-full bg-[#25be5a] hover:bg-[#1ed760] text-white font-bold text-sm transition-all duration-200 hover:scale-90 shadow-lg hover:shadow-xl uppercase">
-                    
+                <button onClick={buttonHandler}
+                    className=" relative overflow-hidden inline-flex scale-[0.85] items-center gap-3 px-8 py-4 m-4 mt-0 rounded-full bg-[#25be5a] hover:bg-[#1ed760] text-white font-bold text-sm transition-all duration-200 hover:scale-90 shadow-lg hover:shadow-xl uppercase">
+                    <div className="absolute rounded-full size-[33px] top-[0.58rem] left-[1.56rem] bg-white/30 backdrop-blur-sm" />
                     {!userMusicData ? <>
-                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg className="z-10 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M3 12h4l3-9 4 18 3-9h4" />
                         </svg>
                         Analyze your music
@@ -231,8 +285,6 @@ const MusicDNA = ({ isSpotifyConnected }: MusicDNAProps) => {
                             <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
                             <path d="M3 21v-5h5"/>
                         </svg>
-
-                        <div className="absolute rounded-full size-[35px] top-[17%] left-[1.5rem] bg-white/30 backdrop-blur-sm" />
                         Refresh Stats
                     </>
                  }
