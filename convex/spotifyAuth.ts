@@ -76,8 +76,14 @@ export const exchangeSpotifyCode = action({
     });
     
     if (!profileResponse.ok) {
-      console.error('Failed to get Spotify profile');
-      throw new Error("Failed to get user profile");
+      const errorText = await profileResponse.text();
+      console.error('Failed to get Spotify profile:', {
+        status: profileResponse.status,
+        statusText: profileResponse.statusText,
+        error: errorText,
+        accessToken: tokenData.access_token ? 'present' : 'missing'
+      });
+      throw new Error(`Failed to get user profile: ${profileResponse.status} ${errorText}`);
     }
     
     const profile = await profileResponse.json();

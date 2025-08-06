@@ -68,7 +68,7 @@ export const getSpotifyStats = action({
 
       // Helper: Fetch wrapper with logs
       const fetchWithLog = async (label: string, url: string): Promise<any> => {
-        // console.log(`📡 Fetching ${label}...`);
+        console.log(`📡 Fetching ${label}...`);
         const res = await fetch(url, { headers });
         if (!res.ok) {
           // console.error(`❌ Failed to fetch ${label}`, await res.text());

@@ -22,7 +22,6 @@ const HomeMidSection = ({
     isGenerating,
     handleGenerate,
     setFocusedInput,
-    isSpotifyConnected,
 }: HomeMidSectionProps) => (
     <div className="relative overflow-hidden rounded-2xl shadow-lg bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-[#31c266]/15 dark:border-gray-700">
         {/* Enhanced decorative background */}

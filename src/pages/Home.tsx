@@ -128,6 +128,12 @@ const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
       return;
     }
 
+    if (!isSpotifyConnected) {
+      toast.error("Spotify is not connected. Please connect your Spotify account to generate playlists.");
+      setIsGenerating(false);
+      return;
+    }
+
     try {
       const result = await generate({ prompt: description, playlistName: playlistName, token: sessionToken });
       console.log("AI generation result: ", result);

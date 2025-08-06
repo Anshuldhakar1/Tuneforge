@@ -1,4 +1,4 @@
-import { Heart, Share2, Download } from "lucide-react";
+import { Heart, Download } from "lucide-react";
 import clsx from "clsx";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
