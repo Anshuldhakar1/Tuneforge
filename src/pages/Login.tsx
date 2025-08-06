@@ -67,7 +67,7 @@ const Login = () => {
             <div className="max-w-md w-full space-y-8 border-2 border-grey-200 rounded-lg p-8 bg-white/80 backdrop-blur shadow-md font-sans">
                 <div className="text-center mb-8">
                     <span
-                        className={`inline-flex pl-[4rem] items-center gap-2 text-2xl font-bold transition-colors text-gray-900 relative`}
+                        className={`inline-flex pl-[4rem] items-center gap-2 text-2xl font-bold transition-colors text-gray-900 relative right-[1rem]`}
                     >
                         {/* left-[-5.5rem] top-[-1rem] */}
                         <div className="absolute left-[-1rem] top-[-1rem] flex items-center justify-center p-1">
