@@ -62,26 +62,25 @@ const HeaderSelect = ({ className, user, signout }: HeaderSelectProps) => {
             style={{ zIndex: 1000 }}
         >
             <button
-                className={`group flex items-center gap-3 px-4 w-[14rem] py-2.5 ${open ? 'rounded-t-xl border-b-0' : 'rounded-xl'} bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-[2px]  dark:border-gray-700/40 border-[#31c266]/50 hover:shadow-xl hover:bg-white/95 dark:hover:bg-gray-900/95 transition-all duration-300 shadow-lg w-[12.5rem] relative overflow-hidden`}
+                className={`group flex items-center gap-3 sm:px-4 px-4 pl-6 w-fit sm:w-[14rem] py-2.5 ${open ? 'rounded-t-xl border-b-0' : 'rounded-xl'} bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-[2px]  dark:border-gray-700/40 border-[#31c266]/50 hover:shadow-xl hover:bg-white/95 dark:hover:bg-gray-900/95 transition-all duration-300 shadow-lg w-[12.5rem] relative overflow-hidden`}
                 onClick={() => setOpen((o) => !o)}
                 aria-haspopup="true"
                 aria-expanded={open}
                 type="button"
             >
                 <div className="relative flex items-center gap-3 flex-1">
-                    <div className="relative">
+                    <div className="relative hidden sm:block">
                         <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#31c266]/20 via-emerald-400/30 to-[#31c266]/40 dark:from-[#31c266]/30 dark:via-emerald-500/40 dark:to-[#31c266]/50 flex items-center justify-center text-[#31c266] dark:text-emerald-400 font-bold text-sm shadow-xl border border-[#31c266]/20 dark:border-emerald-400/20 relative overflow-hidden">
-                            {/* Shimmer effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                             <span className="relative z-10">{getInitials(user.username)}</span>
                         </span>
                     </div>
-                    
-                    <div className="flex-1 min-w-0 overflow-hidden max-w-[7rem]">
+
+                    <div className="flex-1 min-w-0 overflow-hidden max-w-[7rem] p-[0.35rem] scale-[1.2] sm:scale-100 relative top-[-1px] left-[-1px] sm:top-0 sm:left-0 sm:p-0">
                         <span className="block text-sm font-semibold text-gray-900 dark:text-white leading-tight overflow-hidden whitespace-nowrap text-ellipsis">
                             {capitalize(user.username)}
                         </span>
-                        <span className="block text-xs text-gray-500 dark:text-gray-400 truncate">
+                        <span className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 truncate">
                             Ready to tune?
                         </span>
                     </div>

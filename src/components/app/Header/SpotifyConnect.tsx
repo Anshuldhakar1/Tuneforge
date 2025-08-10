@@ -115,15 +115,15 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
           className={` ${className} flex items-center justify-center border-2 
           ${borderColor} transition-all duration-300 ease-in-out
           ${bgColor}
-          rounded-full p-2`}
+          rounded-full p-2 h-fit`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={clickHandler}
       >
-          <div className="w-7 h-7 flex items-center justify-center">
-              <SpotifyLogo className="w-7 h-7 text-black" />
+          <div className="sm:w-7 sm:h-7 flex items-center justify-center">
+              <SpotifyLogo className="w-6 h-6 sm:w-7 sm:h-7 text-black" />
           </div>
-          <div className="transition-all duration-300 ease-in-out flex items-center">
+          <div className="transition-all duration-300 ease-in-out hidden sm:flex items-center">
               <span
                   className={`
                       text-sm transition-all duration-100 ease-in-out
@@ -135,6 +135,19 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
               >
                   {!isSpotifyConnected ? (isHovered ? "Connect" : "Disconnected") :(isHovered ? "Disconnect" : "Connected")}
               </span>
+          </div>
+          <div className="transition-all duration-300 ease-in-out flex items-center sm:hidden">
+            <span
+              className={`
+                          text-sm transition-all duration-100 ease-in-out
+                          opacity-100 max-w-[120px] mx-2 pb-1"
+                          ${isSpotifyConnected ? (isHovered ? "text-red-500" : "text-green-500") : (!isHovered ? "text-red-500" : "text-green-500")}
+                          inline-block overflow-hidden font-[515]
+                      `}
+              style={{ transitionProperty: "max-width, opacity, margin" }}
+            >
+              {!isSpotifyConnected ? (isHovered ? "Connect" : "Offline") : (isHovered ? "Disconnect" : "Online")}
+            </span>
           </div>
       </button>
   );
