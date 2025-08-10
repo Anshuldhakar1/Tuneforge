@@ -22,22 +22,15 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 interface HomeProps {
-  user: {
-    username: string
-    email: string
-    userId: string
-  } | null
   loading: boolean
   isSpotifyConnected: boolean
 }
 
-const Home = ({ user, loading, isSpotifyConnected }: HomeProps) => {
+const Home = ({  loading, isSpotifyConnected }: HomeProps) => {
   const [description, setDescription] = useState("")
   const [playlistName, setPlaylistName] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [focusedInput, setFocusedInput] = useState<string | null>(null)
-
-  console.log(user);
 
   const generate = useAction(api.gemini.aiGenerate);
   const navigate = useNavigate();

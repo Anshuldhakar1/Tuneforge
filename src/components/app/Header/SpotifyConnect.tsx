@@ -25,8 +25,6 @@ const SpotifyConnect = ({ className, isSpotifyConnected, setSpotifyConnected }: 
     token ? { token } : "skip"
   );
 
-  console.log(spotifyConnectionStatus);
-
   const disconnectSpotify = useMutation(api.spotifyAuth.disconnectSpotify);
 
   const [isHovered, setIsHovered] = React.useState(false);
