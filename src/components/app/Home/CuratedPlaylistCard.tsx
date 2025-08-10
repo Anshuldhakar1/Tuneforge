@@ -54,7 +54,7 @@ const CuratedPlaylistCard = ({ playlist, onClick }: CuratedPlaylistCardProps) =>
                     </span>
                     <ArrowRight className="w-4 h-4 text-[#31c266] opacity-0 group-hover:opacity-100 transition-all duration-300 transform group-hover:translate-x-1 group-hover:scale-110" />
                 </div>
-                <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-semibold group-hover:text-[#31c266] transition-colors duration-300">{playlist.title}</p>
+                <p className={`text-sm text-gray-800 dark:text-gray-200 leading-relaxed font-semibold group-hover:${playlist.color} transition-colors duration-300`}>{playlist.title}</p>
             </div>
         </div>
     </button>
